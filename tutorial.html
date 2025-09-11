@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tutorial - 2048 EAN</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <div class="contenedor-juego">
+    <h1 class="titulo">2048 <span class="ean">EAN</span></h1>
+
+    <!-- Carrusel de tutorial -->
+    <div class="carrusel">
+      <!-- Slide 1 -->
+      <div class="carrusel-item activo">
+        <h2>📖 Tutorial</h2>
+        <p>
+          El juego consiste en mover las fichas en un tablero 4x4, combinando
+          números iguales hasta alcanzar la meta de 2048. Cada movimiento añade
+          una nueva ficha de 2 o 4.
+        </p>
+        <ul>
+          <li>Usa las flechas o WASD para mover las fichas.</li>
+          <li>En dispositivos móviles, desliza en la dirección deseada.</li>
+          <li>Combina números iguales para que se sumen.</li>
+          <li>Gana cuando logres obtener la ficha de 2048.</li>
+        </ul>
+      </div>
+
+      <!-- Slide 2-7 (estrategia de juego) -->
+      <div class="carrusel-item"><p>Mantén las fichas en la fila inferior.</p><div class="mini-tablero" data-estado="1"></div></div>
+      <div class="carrusel-item"><p>Apila las fichas hacia la esquina inferior izquierda.</p><div class="mini-tablero" data-estado="2"></div></div>
+      <div class="carrusel-item"><p>Llena la primera fila antes de mover hacia arriba.</p><div class="mini-tablero" data-estado="3"></div></div>
+      <div class="carrusel-item"><p>Fusiona fichas en la fila inferior y mantén el control.</p><div class="mini-tablero" data-estado="4"></div></div>
+      <div class="carrusel-item"><p>Genera espacio sin romper la fila inferior.</p><div class="mini-tablero" data-estado="5"></div></div>
+      <div class="carrusel-item"><p>Acumula fichas grandes en la esquina izquierda.</p><div class="mini-tablero" data-estado="6"></div></div>
+      <div class="carrusel-item"><p>¡Ya tienes fichas grandes preparadas!</p><div class="mini-tablero" data-estado="7"></div></div>
+
+      <!-- Slide final: todas las fichas hasta 2048 -->
+      <div class="carrusel-item"><p>¡Y así llegarás al 2048!⭐</p><div class="mini-tablero" data-estado="8"></div></div>
+
+      <!-- Slide nuevo: explicación del slider -->
+      <div class="carrusel-item">
+        <h2>🎚️ El Slider de Deshacer</h2>
+        <p>
+          El deslizador te permite elegir cuántos movimientos atrás puedes revertir,
+          entre 1 y 12. ¡Úsalo con estrategia para no perder tu progreso!
+        </p>
+      </div>
+
+
+    <!-- Controles e indicadores -->
+    <div class="carrusel-controles">
+      <button id="btn-prev" disabled>⬅</button>
+      <div class="carrusel-indicadores"></div>
+      <button id="btn-next">➡</button>
+    </div>
+
+    <!-- Botones de navegación -->
+    <div class="botones-menu">
+      <a href="2048.html"><button class="btn-juego">🎮 Jugar</button></a>
+      <a href="menu.html"><button class="btn-juego">⬅ Volver al Menú</button></a>
+    </div>
+  </div>
+
+  <!-- Script para el carrusel -->
+  <script src="tutorial.js"></script>
+</body>
+</html>

@@ -1,0 +1,735 @@
+/* Reset y configuración básica */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #4ade80 0%, #22d3ee 50%, #3b82f6 100%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Contenedor principal */
+.contenedor-juego {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Encabezado */
+.encabezado {
+  margin-bottom: 30px;
+}
+
+.titulo {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #776e65;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.titulo .ean {
+  font-size: 3rem;
+  font-weight: bold;
+
+  /* Degradado igual al del body */
+  background: linear-gradient(135deg, #4ade80 0%, #22d3ee 50%, #3b82f6 100%);
+  -webkit-background-clip: text; /* Chrome / Safari */
+  -webkit-text-fill-color: transparent;
+  background-clip: text;          /* Firefox */
+  color: transparent;             /* fallback */
+}
+
+
+.barra-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.contenedor-puntajes {
+  background: #bbada0;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.grupo-puntajes {
+  display: flex;
+  gap: 15px;
+  flex: 1;
+}
+
+.item-puntaje {
+  text-align: center;
+  flex: 1;
+}
+
+.etiqueta-puntaje {
+  font-size: 0.8rem;
+  margin-bottom: 5px;
+  opacity: 0.9;
+}
+
+.valor-puntaje {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.abeja {
+  font-size: 1.5rem;
+}
+
+.contenedor-botones {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-juego {
+  background: #8f7a66;
+  color: white;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 80px;
+}
+
+.btn-juego:hover {
+  background: #9f857a;
+  transform: translateY(-2px);
+}
+
+.btn-juego:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  opacity: 0.6;
+}
+
+/* Controles adicionales */
+.controles-extra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-size: 0.8rem;
+  color: #776e65;
+}
+
+.control-deshacer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.control-deshacer input[type="range"] {
+  width: 60px;
+}
+
+/* Tablero */
+.tablero-juego {
+  position: relative;
+  background: #bbada0;
+  border-radius: 15px;
+  padding: 10px;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 10px;
+  touch-action: none;
+  overflow: hidden;
+}
+
+/* Celdas */
+.celda {
+  background: rgba(238, 228, 218, 0.35);
+  border-radius: 10px;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Fichas */
+.ficha {
+  position: absolute;
+  border-radius: 10px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease-in-out;
+  aspect-ratio: 1;
+  font-size: 2rem;
+  z-index: 1;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Animaciones */
+.ficha.nueva {
+  animation: aparecer 0.2s ease-in-out;
+}
+
+.ficha.fusion {
+  animation: salto 0.2s ease-in-out;
+}
+
+@keyframes aparecer {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes salto {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* Colores de fichas */
+.ficha.v2 { background: #e8f5e8; color: #2d5016; }
+.ficha.v4 { background: #d4ecd4; color: #2d5016; }
+.ficha.v8 { background: #a8d8a8; color: #1a3d0a; }
+.ficha.v16 { background: #7bc47b; color: #ffffff; }
+.ficha.v32 { background: #5fb85f; color: #ffffff; }
+.ficha.v64 { background: #4caf4c; color: #ffffff; }
+.ficha.v128 { background: #43a047; color: #ffffff; font-size: 1.7rem; }
+.ficha.v256 { background: #3e9142; color: #ffffff; font-size: 1.7rem; }
+.ficha.v512 { background: #388e3c; color: #ffffff; font-size: 1.7rem; }
+.ficha.v1024 { background: #2e7d32; color: #ffffff; font-size: 1.5rem; }
+.ficha.v2048 { background: #3bac53; color: #ffffff; font-size: 1.5rem; box-shadow: 0 0 20px rgba(59, 172, 83, 0.7); }
+
+/* Instrucciones */
+.instrucciones {
+  margin-top: 30px;
+  color: #776e65;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Pantalla final */
+.fin-juego {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 100;
+}
+
+.fin-juego.mostrar {
+  display: flex;
+}
+
+.texto-fin {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #776e65;
+  margin-bottom: 20px;
+}
+
+.puntaje-fin {
+  font-size: 1.2rem;
+  color: #8f7a66;
+  margin-bottom: 20px;
+}
+
+.botones-fin {
+  display: flex;
+  gap: 10px;
+}
+
+/* Sección educativa */
+.seccion-educativa {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 30px;
+  margin-top: 30px;
+  max-width: 800px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.seccion-educativa h2 {
+  color: #3bac53;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.seccion-educativa h3 {
+  color: #2d8441;
+  font-size: 1.3rem;
+  margin-top: 25px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.seccion-educativa p {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  text-align: justify;
+}
+
+.seccion-educativa .resaltado {
+  background: linear-gradient(120deg, rgba(59, 172, 83, 0.1) 0%, rgba(59, 172, 83, 0.05) 100%);
+  padding: 15px;
+  border-left: 4px solid #3bac53;
+  border-radius: 5px;
+  margin: 20px 0;
+}
+
+.seccion-educativa ul {
+  color: #555;
+  padding-left: 20px;
+  margin-bottom: 15px;
+}
+
+.seccion-educativa li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .contenedor-juego { padding: 20px; margin: 10px; }
+  .titulo { font-size: 2.5rem; margin-bottom: 15px; }
+  .titulo .ean { font-size: 2.5rem; }
+  .barra-info { flex-direction: column; gap: 15px; }
+  .contenedor-puntajes { width: 100%; }
+  .contenedor-botones { width: 100%; justify-content: center; }
+  .btn-juego { flex: 1; min-width: 70px; padding: 10px; font-size: 0.8rem; }
+  .tablero-juego { max-width: 300px; gap: 8px; padding: 8px; }
+  .ficha { font-size: 1.5rem; }
+  .ficha.v128, .ficha.v256, .ficha.v512 { font-size: 1.3rem; }
+  .ficha.v1024, .ficha.v2048 { font-size: 1.1rem; }
+  .instrucciones { font-size: 0.8rem; margin-top: 20px; }
+  .seccion-educativa { padding: 20px; margin: 20px 10px; }
+  .seccion-educativa h2 { font-size: 1.5rem; }
+  .seccion-educativa h3 { font-size: 1.2rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ficha { transition: none; animation: none; }
+}
+
+/* --- Mini Scoreboard --- */
+.mini-score {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 20px;
+  margin-top: 25px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.mini-score h3 {
+  color: #3bac53;
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+#lista-scores {
+  list-style: none;
+  margin: 0 0 15px 0;
+  padding: 0;
+  max-height: none; /* se ajustará al expandir */
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+#lista-scores li {
+  padding: 6px 10px;
+  margin-bottom: 4px;
+  background: #f8f8f8;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  display: flex;
+  justify-content: space-between;
+  color: #444;
+}
+
+#lista-scores li:nth-child(odd) {
+  background: #f1f1f1;
+}
+
+/* Limite inicial a 3 ítems (lo maneja JS, pero añadimos seguridad visual) */
+#lista-scores.mostrando-3 li:nth-child(n+4) {
+  display: none;
+}
+
+/* Botón Ver más mantiene coherencia con botones del juego */
+#btn-ver-mas {
+  background: #8f7a66;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#btn-ver-mas:hover {
+  background: #9f857a;
+  transform: translateY(-2px);
+}
+
+/* Responsive igual que otros bloques */
+@media (max-width: 480px) {
+  .mini-score {
+    padding: 15px;
+    margin: 20px 10px;
+  }
+  .mini-score h3 {
+    font-size: 1.1rem;
+  }
+  #lista-scores li {
+    font-size: 0.8rem;
+    padding: 5px 8px;
+  }
+}
+
+/* =======================================================
+   Flechas y acordeón (para menú y tutorial)
+   ======================================================= */
+
+.flecha {
+  width: 16px;
+  height: 16px;
+  fill: white;
+  transition: transform 0.4s ease;
+  display: inline-block;
+}
+
+.flecha.arriba {
+  transform: rotate(180deg);
+}
+
+.acordeon {
+  margin-top: 20px;
+}
+
+.acordeon-btn {
+  background: #8f7a66;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.acordeon-btn:hover {
+  background: #9f857a;
+  transform: translateY(-2px);
+}
+
+.acordeon-contenido {
+  display: none;           /* totalmente oculto */
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 10px;
+  color: #444;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.acordeon-contenido.expandido {
+  display: block;          /* se muestra normal */
+}
+
+
+
+
+/* Opcional: estilo del bloque de descripción en menu.html */
+.descripcion {
+  margin-top: 15px;
+  font-size: 1rem;
+  color: #444;
+  background: #f9f9f9;
+  padding: 10px 15px;
+  border-radius: 10px;
+  overflow: hidden;
+  max-height: 2.2em; /* muestra una línea por defecto */
+  transition: max-height 0.45s ease;
+  line-height: 1.2em;
+  text-align: left;
+}
+
+.descripcion.expandida {
+  max-height: 600px;
+}
+
+#btn-expandir {
+  margin-top: 10px;
+  background: #8f7a66;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#btn-expandir:hover {
+  background: #9f857a;
+  transform: translateY(-2px);
+}
+
+/* Contenedor principal del menú */
+.contenedor-menu {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  margin: 24px auto;
+}
+
+/* Asegurar que todo el texto esté dentro del cuadro */
+.contenedor-menu p,
+.contenedor-menu h3,
+.contenedor-menu ul {
+  color: #444;
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+/* Botón acordeón */
+.acordeon-btn {
+  background: #8f7a66;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+}
+
+.acordeon-btn:hover {
+  background: #9f857a;
+  transform: translateY(-2px);
+}
+
+/* Contenido desplegable */
+.acordeon-contenido {
+  margin-top: 10px;
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 10px;
+  color: #444;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+  text-align: left;
+}
+
+.acordeon-contenido.expandido {
+  max-height: 1000px; /* suficiente para texto largo */
+}
+
+/* Flecha SVG */
+.flecha {
+  width: 18px;
+  height: 18px;
+  fill: white;
+  transition: transform 0.4s ease;
+}
+
+.flecha.arriba {
+  transform: rotate(180deg);
+}
+
+/* Responsive ajustes */
+@media (max-width: 480px) {
+  .contenedor-menu {
+    padding: 20px;
+    margin: 10px;
+  }
+  .acordeon-btn {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+  .acordeon-contenido {
+    font-size: 0.85rem;
+    padding: 10px;
+  }
+}
+
+.botones-menu {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 30px; /* 🔥 más espacio respecto al acordeón */
+  flex-wrap: wrap;
+}
+
+.carrusel {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 300px;
+}
+
+.carrusel-item {
+  display: none;
+  text-align: center;
+  animation: fade 0.4s ease;
+}
+
+.carrusel-item.activo {
+  display: block;
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.carrusel-controles {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.carrusel-controles button {
+  background: #fff;
+  border: 2px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.mini-tablero {
+  margin: 10px auto;
+  width: 252px;   /* antes 180px */
+  height: 252px;  /* antes 180px */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 6px;       /* antes 4px */
+  background: #bbada0;
+  border-radius: 8px;
+  padding: 6px;   /* antes 4px */
+}
+
+
+.mini-celda {
+  background: #cdc1b4;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+
+.mini-celda.v2    { background: #e8f5e8; color: #2d5016; }
+.mini-celda.v4    { background: #d4ecd4; color: #2d5016; }
+.mini-celda.v8    { background: #a8d8a8; color: #1a3d0a; }
+.mini-celda.v16   { background: #7bc47b; color: #ffffff; }
+.mini-celda.v32   { background: #5fb85f; color: #ffffff; }
+.mini-celda.v64   { background: #4caf4c; color: #ffffff; }
+.mini-celda.v128  { background: #43a047; color: #ffffff; font-size: 16px; }
+.mini-celda.v256  { background: #3e9142; color: #ffffff; font-size: 16px; }
+.mini-celda.v512  { background: #388e3c; color: #ffffff; font-size: 16px; }
+.mini-celda.v1024 { background: #2e7d32; color: #ffffff; font-size: 14px; }
+.mini-celda.v2048 { background: #3bac53; color: #ffffff; font-size: 14px; box-shadow: 0 0 12px rgba(59, 172, 83, 0.6); }
+
+.carrusel-indicadores {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+}
+
+.carrusel-indicadores .indicador {
+  width: 10px;
+  height: 10px;
+  background: #ccc;
+  border-radius: 50%;
+  transition: background 0.2s ease;
+}
+
+.carrusel-indicadores .indicador.activo {
+  background: #3bac53; /* verde del tema */
+}
+
+/* Espacio extra en el primer slide para igualar altura */
+.tutorial-intro {
+  padding-bottom: 252px; /* mismo alto que .mini-tablero */
+  box-sizing: border-box;
+}

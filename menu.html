@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Menú - 2048 EAN</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <div class="contenedor-menu">
+    <h1 class="titulo">2048 <span class="ean">EAN</span></h1>
+
+    <!-- Texto introductorio original -->
+    <p>
+      2048 es un juego matemático de lógica y estrategia donde debes combinar fichas para llegar al número más alto posible.
+    </p>
+
+    <!-- Botón desplegable -->
+    <div class="acordeon">
+      <button class="acordeon-btn" id="btn-info">
+        <span id="texto-info">🧮 ¿Por qué 2048 es un Juego Matemático?</span>
+        <svg id="flecha-info" class="flecha" viewBox="0 0 24 24">
+          <path d="M7 10l5 5 5-5z"/>
+        </svg>
+      </button>
+      <div id="contenido-info" class="acordeon-contenido">
+        <p>
+          El juego 2048 es mucho más que entretenimiento; permite explorar conceptos matemáticos fundamentales aplicables en la vida real y en diversas disciplinas académicas.
+        </p>
+        <h3>📊 Conceptos Matemáticos Presentes:</h3>
+        <ul>
+          <li><strong>Potencias de 2:</strong> Cada número (2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048...) es una potencia de 2, ilustrando el crecimiento exponencial que aparece en fenómenos naturales y tecnológicos.</li>
+          <li><strong>Progresiones Geométricas:</strong> La secuencia de números sigue una razón 2, clave en matemáticas, interés compuesto y algoritmos.</li>
+          <li><strong>Matrices y Grafos:</strong> El tablero 4×4 es una matriz bidimensional, y los movimientos se pueden analizar con álgebra lineal.</li>
+          <li><strong>Probabilidad:</strong> Cada nueva ficha es un 2 (90%) o un 4 (10%), incorporando elementos aleatorios que influyen en la estrategia.</li>
+        </ul>
+        <p><strong>Conclusión:</strong> 2048 EAN es una herramienta educativa que vuelve la matemática accesible y divertida, mostrando aplicaciones prácticas en nuestro mundo digital y científico.</p>
+      </div>
+    </div>
+
+    <!-- Botones de navegación -->
+    <div class="botones-menu">
+      <a href="2048.html"><button class="btn-juego">🎮 Jugar</button></a>
+      <a href="tutorial.html"><button class="btn-juego">📖 Tutorial</button></a>
+    </div>
+  </div>
+
+<script>
+  const btnInfo = document.getElementById("btn-info");
+  const flechaInfo = document.getElementById("flecha-info");
+  const contenidoInfo = document.getElementById("contenido-info");
+  let abierto = false;
+
+  btnInfo.addEventListener("click", () => {
+    abierto = !abierto;
+    contenidoInfo.classList.toggle("expandido", abierto);
+    flechaInfo.classList.toggle("arriba", abierto);
+  });
+</script>
+
+</body>
+</html>

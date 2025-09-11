@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2048 ean - Proyecto Matemático</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <div class="contenedor-juego">
+    <!-- Encabezado -->
+    <div class="encabezado">
+      <h1 class="titulo">2048 <span class="ean">EAN</span></h1>
+
+      <div class="barra-info">
+        <div class="contenedor-puntajes">
+          <div class="grupo-puntajes">
+            <div class="item-puntaje">
+              <div class="etiqueta-puntaje">PUNTAJE</div>
+              <div class="valor-puntaje" id="puntaje">0</div>
+            </div>
+            <div class="item-puntaje">
+              <div class="etiqueta-puntaje">MEJOR</div>
+              <div class="valor-puntaje" id="mejor">0</div>
+            </div>
+          </div>
+          <div class="abeja">🐝</div>
+        </div>
+
+        <div class="contenedor-botones">
+          <button class="btn-juego" id="btn-deshacer">↶ DESHACER</button>
+          <button class="btn-juego" id="btn-reiniciar">🔄 REINICIAR</button>
+          <!-- Botón tutorial en lugar de sonido -->
+          <a href="tutorial.html"><button class="btn-juego">📖 TUTORIAL</button></a>
+        </div>
+      </div>
+
+      <div class="controles-extra">
+        <!-- 🔹 Eliminado el texto "Usa las flechas, WASD o desliza en el móvil" -->
+        <div class="control-deshacer">
+          <label>Pasos a deshacer:</label>
+          <input id="rango-deshacer" type="range" min="1" max="12" value="6">
+          <span id="valor-deshacer">6</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tablero -->
+    <div class="tablero-juego" id="tablero-juego">
+      <!-- Celdas de fondo -->
+      <div class="celda"></div><div class="celda"></div><div class="celda"></div><div class="celda"></div>
+      <div class="celda"></div><div class="celda"></div><div class="celda"></div><div class="celda"></div>
+      <div class="celda"></div><div class="celda"></div><div class="celda"></div><div class="celda"></div>
+      <div class="celda"></div><div class="celda"></div><div class="celda"></div><div class="celda"></div>
+
+      <!-- Pantalla de fin -->
+      <div class="fin-juego" id="fin-juego">
+        <div class="texto-fin" id="texto-superior">¡Fin del juego!</div>
+        <div class="puntaje-fin" id="mensaje-fin">Puntaje final: <span id="puntaje-final">0</span></div>
+        <div class="botones-fin">
+          <button class="btn-juego" id="btn-continuar" style="display:none">Continuar</button>
+          <button class="btn-juego" id="btn-reiniciar2">JUGAR DE NUEVO</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Instrucciones -->
+    <div class="instrucciones">
+      Mueve las fichas con flechas, WASD o desliza el dedo. 
+      Cuando dos fichas con el mismo número se tocan, ¡se fusionan! Llega a 2048 para ganar.
+      <br><br>
+    </div>
+
+    <!-- Mini Scoreboard -->
+    <div id="mini-score" class="mini-score">
+      <h3>🏆Puntajes🏆</h3>
+      <ul id="lista-scores"></ul>
+      <button id="btn-ver-mas" class="btn-juego">Ver más</button>
+    </div>
+
+    <!-- 🔹 Eliminada la sección educativa completa -->
+
+  </div>
+
+  <script src="juego.js"></script>
+</body>
+</html>
