@@ -27,6 +27,7 @@ class Juego2048 {
     this.historial = [];
     this.maxDeshacer = 6;
     this.sonidoActivo = true;
+    this.continuarDespuesVictoria = false;
 
     // Referencias UI
     this.domTablero = document.getElementById('tablero-juego');
@@ -122,9 +123,14 @@ class Juego2048 {
     });
   }
 
-  // Continuar (overlay)
-  const btnContinuar = document.getElementById('btn-continuar');
-  if (btnContinuar) btnContinuar.addEventListener('click', () => this.ocultarFin());
+// Continuar (overlay)
+const btnContinuar = document.getElementById('btn-continuar');
+if (btnContinuar) btnContinuar.addEventListener('click', () => {
+  this.ocultarFin();
+  this.ganado = false;                  // salir del estado de victoria
+  this.continuarDespuesVictoria = true; // evita que el popup se repita
+});
+
 
   // Botón JUGAR DE NUEVO (overlay) -> reiniciar sin guardar/preguntar,
   // porque mostrarFin() ya guardó el score cuando terminó la partida.
@@ -164,13 +170,16 @@ class Juego2048 {
     const overlay = document.createElement('div');
     overlay.id = 'fin-juego';
     overlay.className = 'fin-juego';
-    overlay.innerHTML = `
-      <div class="texto-fin" id="texto-superior">¡Fin del juego!</div>
-      <div class="puntaje-fin" id="mensaje-fin">Puntaje final: <span id="puntaje-final">0</span></div>
-      <div class="botones-fin">
-        <button class="btn-juego" id="btn-continuar" style="display:none">Continuar</button>
-        <button class="btn-juego" id="btn-reiniciar2">JUGAR DE NUEVO</button>
-      </div>`;
+overlay.innerHTML = `
+  <div class="modal-victoria">
+    <h2 id="texto-superior">¡Llegaste a 2048 🎉!</h2>
+    <p id="mensaje-fin">Puntaje final: <span id="puntaje-final">0</span></p>
+    <div class="botones-fin">
+      <button class="btn-juego" id="btn-continuar">Continuar</button>
+      <button class="btn-juego" id="btn-reiniciar2">Reiniciar</button>
+    </div>
+  </div>`;
+
     this.domTablero.appendChild(overlay);
     this.domFin = document.getElementById('fin-juego');
     this.domPuntajeFinal = document.getElementById('puntaje-final');
@@ -286,11 +295,24 @@ reiniciar() {
     this.sonido(300, 0.04); this.actualizarVista(); this.actualizarBotones(); this.guardar(); this.verificarEstado();
   }
 
-  verificarEstado() {
-    this.ganado = this.tablero.some(f => f.includes(2048));
-    this.terminado = this.esFin();
-    if (this.ganado || this.terminado) setTimeout(() => this.mostrarFin(), 300);
+verificarEstado() {
+  const hay2048 = this.tablero.some(f => f.includes(2048));
+
+  // Solo mostrar victoria la primera vez
+  if (hay2048 && !this.continuarDespuesVictoria && !this.ganado) {
+    this.ganado = true;
+    setTimeout(() => this.mostrarFin(), 300);
+    return;
   }
+
+  // Si no hay más movimientos, fin del juego
+  if (this.esFin()) {
+    this.terminado = true;
+    setTimeout(() => this.mostrarFin(), 300);
+  }
+}
+
+
 
   esFin() {
     for (let r = 0; r < TAM; r++) for (let c = 0; c < TAM; c++) if (this.tablero[r][c] === 0) return false;

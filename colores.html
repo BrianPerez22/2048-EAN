@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Paleta predominante verde - 2048 extendida</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;background:#faf8f3;padding:24px;display:flex;flex-direction:column;align-items:center;gap:40px}
+    h1{font-size:1.8rem;margin-bottom:8px;color:#333;text-align:center}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:16px;max-width:1200px;width:100%}
+    .tile{border-radius:12px;display:flex;align-items:center;justify-content:center;padding:18px;font-weight:700;font-size:1.4rem;min-height:100px;position:relative}
+    .label{font-size:0.8rem;color:#222;margin-top:6px;text-align:center}
+    .card{background:white;border-radius:14px;padding:20px;width:100%;box-shadow:0 8px 18px rgba(0,0,0,0.1)}
+
+    /* === Paleta predominante verde === */
+    .new2    { background:#e6f7e9; color:#1b5e20; }
+    .new4    { background:#c8f7d4; color:#1b5e20; }
+    .new8    { background:#81c784; color:#ffffff; }
+    .new16   { background:#4caf50; color:#ffffff; }
+    .new32   { background:#2e7d32; color:#ffffff; }
+    .new64   { background:#1b5e20; color:#ffffff; }
+
+    /* === Colores 128 - 1024 === */
+    .new128  { background:#2AA589; color:#ffffff; font-size:1.2rem }
+    .new256  { background:#008272; color:#ffffff; font-size:1.2rem }
+    .new512  { background:#005C4D; color:#ffffff; font-size:1.2rem }
+    .new1024 { background:#003B4C; color:#ffffff; font-size:1.05rem }
+
+    /* === 2048 con brillo inicial === */
+    .new2048 { background:#2bbbad; color:#ffffff; font-size:1.05rem; box-shadow:0 0 20px rgba(43,187,173,0.7) inset, 0 0 25px rgba(43,187,173,0.8) }
+
+    /* === Extensión más allá de 2048 === */
+    .new4096  { background:#5C2AB2; color:#ffffff; font-size:1.05rem; box-shadow:0 0 25px rgba(92,42,178,0.8) inset, 0 0 35px rgba(92,42,178,0.9) }
+    .new8192  { background:#892AB2; color:#ffffff; font-size:1.05rem; box-shadow:0 0 30px rgba(137,42,178,0.85) inset, 0 0 40px rgba(137,42,178,0.95) }
+    .new16384 { background:#B22A89; color:#ffffff; font-size:1.05rem; box-shadow:0 0 35px rgba(178,42,137,0.9) inset, 0 0 45px rgba(178,42,137,1) }
+    .new32768 { background:#B22A5C; color:#ffffff; font-size:1.05rem; box-shadow:0 0 40px rgba(178,42,92,0.9) inset, 0 0 50px rgba(178,42,92,1) }
+    .new65536 { background:#000000; color:#ffffff; font-size:1.05rem; box-shadow:0 0 45px rgba(255,255,255,0.7) inset, 0 0 55px rgba(255,255,255,0.9) }
+
+    @media(max-width:480px){.tile{min-height:80px;padding:12px;font-size:1.1rem}}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Paleta alternativa — predominancia verde extendida</h1>
+    <div class="grid">
+      <div><div class="tile new2">2</div><div class="label">#e6f7e9</div></div>
+      <div><div class="tile new4">4</div><div class="label">#c8f7d4</div></div>
+      <div><div class="tile new8">8</div><div class="label">#81c784</div></div>
+      <div><div class="tile new16">16</div><div class="label">#4caf50</div></div>
+      <div><div class="tile new32">32</div><div class="label">#2e7d32</div></div>
+      <div><div class="tile new64">64</div><div class="label">#1b5e20</div></div>
+      <div><div class="tile new128">128</div><div class="label">#2AA589</div></div>
+      <div><div class="tile new256">256</div><div class="label">#008272</div></div>
+      <div><div class="tile new512">512</div><div class="label">#005C4D</div></div>
+      <div><div class="tile new1024">1024</div><div class="label">#003B4C</div></div>
+      <div><div class="tile new2048">2048</div><div class="label">#2bbbad</div></div>
+      <div><div class="tile new4096">4096</div><div class="label">#5C2AB2</div></div>
+      <div><div class="tile new8192">8192</div><div class="label">#892AB2</div></div>
+      <div><div class="tile new16384">16384</div><div class="label">#B22A89</div></div>
+      <div><div class="tile new32768">32768</div><div class="label">#B22A5C</div></div>
+      <div><div class="tile new65536">65536</div><div class="label">#000000</div></div>
+    </div>
+  </div>
+</body>
+</html>

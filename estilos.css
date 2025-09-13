@@ -145,15 +145,71 @@ body {
   color: #776e65;
 }
 
+/* Contenedor del control de deshacer */
 .control-deshacer {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  margin-top: 10px;
+  font-weight: bold;
+  color: #332416da;
 }
 
-.control-deshacer input[type="range"] {
-  width: 60px;
+/* Slider base */
+#rango-deshacer {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 150px;
+  height: 8px;
+  border-radius: 5px;
+  background: #c8f7d4;
+  outline: none;
+  cursor: pointer;
 }
+
+/* Track del slider */
+#rango-deshacer::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #10c37f, #1cacbf);
+}
+#rango-deshacer::-moz-range-track {
+  height: 8px;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #10c37f, #1cacbf);
+}
+
+/* Thumb (el circulito que se mueve) */
+#rango-deshacer::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #2bbbad;
+  border: 2px solid white;
+  box-shadow: 0 0 6px rgba(0,0,0,0.25);
+  cursor: pointer;
+  margin-top: -7px; /* centra el círculo */
+}
+#rango-deshacer::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #2bbbad;
+  border: 2px solid white;
+  box-shadow: 0 0 6px rgba(0,0,0,0.25);
+  cursor: pointer;
+}
+
+/* Valor mostrado */
+#valor-deshacer {
+  min-width: 24px;
+  text-align: center;
+  font-weight: bold;
+  color: #332416da;
+}
+
 
 /* Tablero */
 .tablero-juego {
@@ -227,17 +283,22 @@ body {
 }
 
 /* Colores de fichas */
-.ficha.v2 { background: #e8f5e8; color: #2d5016; }
-.ficha.v4 { background: #d4ecd4; color: #2d5016; }
-.ficha.v8 { background: #a8d8a8; color: #1a3d0a; }
-.ficha.v16 { background: #7bc47b; color: #ffffff; }
-.ficha.v32 { background: #5fb85f; color: #ffffff; }
-.ficha.v64 { background: #4caf4c; color: #ffffff; }
-.ficha.v128 { background: #43a047; color: #ffffff; font-size: 1.7rem; }
-.ficha.v256 { background: #3e9142; color: #ffffff; font-size: 1.7rem; }
-.ficha.v512 { background: #388e3c; color: #ffffff; font-size: 1.7rem; }
-.ficha.v1024 { background: #2e7d32; color: #ffffff; font-size: 1.5rem; }
-.ficha.v2048 { background: #3bac53; color: #ffffff; font-size: 1.5rem; box-shadow: 0 0 20px rgba(59, 172, 83, 0.7); }
+.ficha.v2    { background: #e6f7e9; color: #1b5e20; }
+.ficha.v4    { background: #c8f7d4; color: #1b5e20; }
+.ficha.v8    { background: #81c784; color: #ffffff; }
+.ficha.v16   { background: #4caf50; color: #ffffff; }
+.ficha.v32   { background: #2e7d32; color: #ffffff; }
+.ficha.v64   { background: #1b5e20; color: #ffffff; }
+.ficha.v128  { background: #2AA589; color: #ffffff; font-size: 1.7rem; }
+.ficha.v256  { background: #008272; color: #ffffff; font-size: 1.7rem; }
+.ficha.v512  { background: #005C4D; color: #ffffff; font-size: 1.7rem; }
+.ficha.v1024 { background: #003B4C; color: #ffffff; font-size: 1.5rem; }
+.ficha.v2048 { background: #2bbbad; color: #ffffff; font-size: 1.5rem; box-shadow: 0 0 20px rgba(43,187,173,0.7); }
+.ficha.v4096 { background: #5C2AB2; color: #ffffff; font-size: 1.5rem; box-shadow: 0 0 25px rgba(92,42,178,0.8); }
+.ficha.v8192 { background: #892AB2; color: #ffffff; font-size: 1.5rem; box-shadow: 0 0 30px rgba(137,42,178,0.85); }
+.ficha.v16384 { background: #B22A89; color: #ffffff; font-size: 1.4rem; box-shadow: 0 0 35px rgba(178,42,137,0.9); }
+.ficha.v32768 { background: #B22A5C; color: #ffffff; font-size: 1.4rem; box-shadow: 0 0 40px rgba(178,42,92,0.9); }
+.ficha.v65536 { background: #000000; color: #ffffff; font-size: 1.3rem; box-shadow: 0 0 45px rgba(255,255,255,0.8); }
 
 /* Instrucciones */
 .instrucciones {
@@ -697,18 +758,23 @@ body {
 }
 
 
-.mini-celda.v2    { background: #e8f5e8; color: #2d5016; }
-.mini-celda.v4    { background: #d4ecd4; color: #2d5016; }
-.mini-celda.v8    { background: #a8d8a8; color: #1a3d0a; }
-.mini-celda.v16   { background: #7bc47b; color: #ffffff; }
-.mini-celda.v32   { background: #5fb85f; color: #ffffff; }
-.mini-celda.v64   { background: #4caf4c; color: #ffffff; }
-.mini-celda.v128  { background: #43a047; color: #ffffff; font-size: 16px; }
-.mini-celda.v256  { background: #3e9142; color: #ffffff; font-size: 16px; }
-.mini-celda.v512  { background: #388e3c; color: #ffffff; font-size: 16px; }
-.mini-celda.v1024 { background: #2e7d32; color: #ffffff; font-size: 14px; }
-.mini-celda.v2048 { background: #3bac53; color: #ffffff; font-size: 14px; box-shadow: 0 0 12px rgba(59, 172, 83, 0.6); }
-
+/* Colores de mini-celdas (tutorial) */
+.mini-celda.v2    { background: #e6f7e9; color: #1b5e20; }
+.mini-celda.v4    { background: #c8f7d4; color: #1b5e20; }
+.mini-celda.v8    { background: #81c784; color: #ffffff; }
+.mini-celda.v16   { background: #4caf50; color: #ffffff; }
+.mini-celda.v32   { background: #2e7d32; color: #ffffff; }
+.mini-celda.v64   { background: #1b5e20; color: #ffffff; }
+.mini-celda.v128  { background: #2AA589; color: #ffffff; font-size: 16px; }
+.mini-celda.v256  { background: #008272; color: #ffffff; font-size: 16px; }
+.mini-celda.v512  { background: #005C4D; color: #ffffff; font-size: 16px; }
+.mini-celda.v1024 { background: #003B4C; color: #ffffff; font-size: 14px; }
+.mini-celda.v2048 { background: #2bbbad; color: #ffffff; font-size: 14px; box-shadow: 0 0 12px rgba(43,187,173,0.6); }
+.mini-celda.v4096 { background: #5C2AB2; color: #ffffff; font-size: 14px; box-shadow: 0 0 14px rgba(92,42,178,0.6); }
+.mini-celda.v8192 { background: #892AB2; color: #ffffff; font-size: 14px; box-shadow: 0 0 16px rgba(137,42,178,0.7); }
+.mini-celda.v16384 { background: #B22A89; color: #ffffff; font-size: 13px; box-shadow: 0 0 18px rgba(178,42,137,0.8); }
+.mini-celda.v32768 { background: #B22A5C; color: #ffffff; font-size: 13px; box-shadow: 0 0 20px rgba(178,42,92,0.9); }
+.mini-celda.v65536 { background: #000000; color: #ffffff; font-size: 12px; box-shadow: 0 0 22px rgba(255,255,255,0.8); }
 .carrusel-indicadores {
   display: flex;
   gap: 6px;
@@ -728,8 +794,54 @@ body {
   background: #3bac53; /* verde del tema */
 }
 
-/* Espacio extra en el primer slide para igualar altura */
-.tutorial-intro {
-  padding-bottom: 252px; /* mismo alto que .mini-tablero */
-  box-sizing: border-box;
+/* === Estilo ventana modal de victoria === */
+#overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+#overlay.mostrar {
+  display: flex;
+}
+
+.modal-victoria {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  width: 320px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  animation: aparecer 0.3s ease-out;
+}
+
+.modal-victoria h2 {
+  margin-top: 0;
+  color: #2bbbad;
+}
+
+.modal-victoria p {
+  margin: 12px 0;
+  font-weight: bold;
+}
+
+.modal-victoria .botones-fin {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.modal-victoria .btn-juego {
+  flex: 1;
+  margin: 0 5px;
+}
+
+@keyframes aparecer {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
