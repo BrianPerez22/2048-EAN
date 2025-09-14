@@ -14,17 +14,22 @@
 
       <div class="barra-info">
         <div class="contenedor-puntajes">
-          <div class="grupo-puntajes">
-            <div class="item-puntaje">
-              <div class="etiqueta-puntaje">PUNTAJE</div>
-              <div class="valor-puntaje" id="puntaje">0</div>
-            </div>
-            <div class="item-puntaje">
-              <div class="etiqueta-puntaje">MEJOR</div>
-              <div class="valor-puntaje" id="mejor">0</div>
-            </div>
-          </div>
-          <div class="abeja">🐝</div>
+<div class="grupo-puntajes">
+  <div class="item-puntaje">
+    <div class="etiqueta-puntaje">PUNTAJE</div>
+    <div class="valor-puntaje" id="puntaje">0</div>
+  </div>
+  <div class="item-puntaje">
+    <div class="etiqueta-puntaje">MEJOR</div>
+    <div class="valor-puntaje" id="mejor">0</div>
+  </div>
+  <div class="item-puntaje">
+    <div class="etiqueta-puntaje">FICHAS</div>
+    <div class="valor-puntaje" id="fichas">0</div>
+  </div>
+</div>
+
+
         </div>
 
      <div class="contenedor-botones">
@@ -65,11 +70,14 @@
     </div>
 
     <!-- Instrucciones -->
-    <div class="instrucciones">
-      Mueve las fichas con flechas, WASD o desliza el dedo. 
-      Cuando dos fichas con el mismo número se tocan, ¡se fusionan! Llega a 2048 para ganar.
-      <br><br>
-    </div>
+<div class="instrucciones-meli">
+  <p class="texto-instrucciones" id="textoInstrucciones">
+    Junta las fichas del mismo número para que se fusionen, llega al 2048 para ganar.
+  </p>
+  <img src="Meli-01.svg" alt="Meli botón" class="meli-boton" id="meliSwitch">
+</div>
+
+
 
     <!-- Mini Scoreboard -->
     <div id="mini-score" class="mini-score">

@@ -845,3 +845,105 @@ body {
   from { transform: scale(0.8); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
+
+.meli-contenedor {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.meli-img {
+  max-width: 200px;
+  height: auto;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.25)); /* sombra detrás */
+}
+
+/* Animación de rebote al hacer clic */
+.meli-img:active {
+  animation: rebote 0.3s ease;
+}
+
+@keyframes rebote {
+  0%   { transform: scale(0.9); }
+  50%  { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.instrucciones-meli {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.texto-instrucciones {
+  flex: 1;
+  font-size: 1rem;
+  color: #444;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.meli-boton {
+  max-width: 120px;
+  height: auto;
+  cursor: pointer;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.25));
+  transition: transform 0.2s ease, filter 0.3s ease;
+}
+
+/* Rebote al hacer clic */
+.meli-boton:active {
+  animation: rebote 0.3s ease;
+}
+
+@keyframes rebote {
+  0%   { transform: scale(0.9); }
+  50%  { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* Estado brillante como un switch */
+.meli-boton.brillante {
+  filter: drop-shadow(0 0 15px #ffeb3b) brightness(1.3);
+}
+
+.texto-instrucciones {
+  flex: 1;
+  font-size: 1rem;
+  color: #444;
+  line-height: 1.4;
+  text-align: left;
+  padding: 15px;
+  border: 2px dashed #444;       /* estilo "dibujado" */
+  border-radius: 10px;
+  background: #fffefc;           /* un blanco cálido */
+  font-family: "Comic Sans MS", "Architects Daughter", cursive; /* estilo dibujado */
+  transition: all 0.3s ease;
+}
+
+/* ✨ Resplandor muy tenue cuando hay 14 fichas */
+.tablero-juego.alerta14 {
+  box-shadow: 0 0 12px 4px rgba(255, 215, 0, 0.2) inset; /* amarillo suave */
+  transition: box-shadow 0.8s ease; /* transición muy suave */
+}
+
+/* ✨ Resplandor medio cuando hay 15 fichas */
+.tablero-juego.alerta15 {
+  box-shadow: 0 0 20px 8px rgba(255, 215, 0, 0.5) inset; /* amarillo más notorio */
+  transition: box-shadow 0.8s ease;
+}
+
+/* 🔥 Resplandor parpadeante cuando hay 16 fichas */
+.tablero-juego.alerta16 {
+  animation: parpadeoNaranja 2.5s infinite ease-in-out;
+}
+
+@keyframes parpadeoNaranja {
+  0%   { box-shadow: 0 0 18px 8px rgba(255, 140, 0, 0.4) inset; }
+  50%  { box-shadow: 0 0 28px 14px rgba(255, 140, 0, 0.8) inset; }
+  100% { box-shadow: 0 0 18px 8px rgba(255, 140, 0, 0.4) inset; }
+}
+

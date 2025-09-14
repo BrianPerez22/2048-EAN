@@ -33,6 +33,7 @@ class Juego2048 {
     this.domTablero = document.getElementById('tablero-juego');
     this.domPuntaje = document.getElementById('puntaje');
     this.domMejor = document.getElementById('mejor');
+    this.domFichas = document.getElementById('fichas');
     this.domFin = document.getElementById('fin-juego');
     this.domPuntajeFinal = document.getElementById('puntaje-final');
     this.botonDeshacer = document.getElementById('btn-deshacer');
@@ -345,14 +346,39 @@ verificarEstado() {
 
   ocultarFin() { this.domFin.classList.remove('mostrar'); }
 
-  actualizarVista() {
-    this.domTablero.querySelectorAll('.ficha').forEach(f => f.remove());
-    for (let r = 0; r < TAM; r++) for (let c = 0; c < TAM; c++) {
-      const v = this.tablero[r][c]; if (v !== 0) this.crearFicha(v, r, c);
-    }
-    this.domPuntaje.textContent = this.puntaje;
-    this.domMejor.textContent = this.mejor;
+actualizarVista() {
+  this.domTablero.querySelectorAll('.ficha').forEach(f => f.remove());
+  for (let r = 0; r < TAM; r++) for (let c = 0; c < TAM; c++) {
+    const v = this.tablero[r][c]; if (v !== 0) this.crearFicha(v, r, c);
   }
+  this.domPuntaje.textContent = this.puntaje;
+  this.domMejor.textContent = this.mejor;
+
+  // 🔹 Nuevo: contar fichas
+if (this.domFichas) {
+  let totalFichas = 0;
+  for (let r = 0; r < TAM; r++) {
+    for (let c = 0; c < TAM; c++) {
+      if (this.tablero[r][c] !== 0) totalFichas++;
+    }
+  }
+  this.domFichas.textContent = totalFichas;
+
+// 🔥 Resplandor según cantidad de fichas
+this.domTablero.classList.remove("alerta14", "alerta15", "alerta16");
+
+if (totalFichas === 14) {
+  this.domTablero.classList.add("alerta14");
+} else if (totalFichas === 15) {
+  this.domTablero.classList.add("alerta15");
+} else if (totalFichas === 16) {
+  this.domTablero.classList.add("alerta16");
+}
+
+}
+
+}
+
 
   crearFicha(valor, fila, col) {
     const ficha = document.createElement('div');
@@ -477,3 +503,20 @@ let juego;
 document.addEventListener('DOMContentLoaded', () => {
   juego = new Juego2048();
 });
+
+// --- Código de Meli Switch ---
+const meli = document.getElementById("meliSwitch");
+const texto = document.getElementById("textoInstrucciones");
+
+if (meli && texto) {
+  const mensaje1 = "Junta las fichas del mismo número para que se fusionen, llega al 2048 para ganar.";
+  const mensaje2 = "Mueve las fichas con WASD, flechas en PC o desliza en el celular.";
+
+  let encendido = false;
+
+  meli.addEventListener("click", () => {
+    encendido = !encendido;
+    meli.classList.toggle("brillante", encendido);
+    texto.textContent = encendido ? mensaje2 : mensaje1;
+  });
+}
