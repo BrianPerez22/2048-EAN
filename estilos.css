@@ -947,3 +947,125 @@ body {
   100% { box-shadow: 0 0 18px 8px rgba(255, 140, 0, 0.4) inset; }
 }
 
+@media (min-aspect-ratio: 16/9) and (min-width: 1024px) {
+  /* Contenedor principal */
+  .contenedor-juego {
+    display: grid;
+    grid-template-columns: 300px 1fr 300px; /* izquierda - centro - derecha */
+    gap: 30px;
+    align-items: start;
+    justify-items: center;
+    max-width: 1200px;
+    width: calc(100% - 40px);
+    padding: 30px 20px;
+  }
+
+  .encabezado {
+    display: contents;
+  }
+
+  .titulo {
+    grid-column: 1 / -1;
+    justify-self: center;
+    margin-bottom: 25px;
+  }
+
+  /* Columna izquierda → puntajes y controles */
+  .barra-info {
+    grid-column: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    width: 100%;
+  }
+
+  .contenedor-puntajes {
+    width: 100%;
+    flex-direction: column;
+    padding: 15px;
+  }
+
+  .grupo-puntajes {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .contenedor-botones {
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-juego {
+    width: 100%;
+    padding: 12px 16px;
+  }
+
+/* Controles adicionales */
+.controles-extra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-size: 0.8rem;
+  color: #776e65;
+}
+
+/* Contenedor del control de deshacer */
+.control-deshacer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  font-weight: bold;
+  color: #332416da;
+}
+
+  /* Centro → tablero */
+  .tablero-juego {
+    grid-column: 2;
+    justify-self: center;
+    max-width: 450px;
+    width: 100%;
+    aspect-ratio: 1;
+  }
+
+  /* Columna derecha → Meli e instrucciones arriba, mini-score pegado debajo */
+  .instrucciones-meli {
+    grid-column: 3;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .texto-instrucciones {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0;
+  }
+
+  .meli-boton {
+    max-width: 100px;
+  }
+
+  /* Mini-score pegado debajo de Meli sin espacio extra */
+  #mini-score {
+    grid-column: 3;
+    width: 100%;
+    margin-top: 15px; /* Espacio mínimo entre Meli y score */
+    padding: 15px;
+  }
+
+  /* Asegurar que no hay espacios extra */
+  #mini-score h3 {
+    margin-bottom: 12px;
+  }
+
+  #lista-scores {
+    margin-bottom: 10px;
+  }
+}
