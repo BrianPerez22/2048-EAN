@@ -308,43 +308,98 @@ reiniciar() {
     return false;
   }
 
-  mover(dir) {
-    this.guardarEstado();
-    let movido = false;
-    for (let idx = 0; idx < TAM; idx++) {
-      let linea = [];
-      for (let j = 0; j < TAM; j++) {
-        switch (dir) {
-          case 'izq': linea.push(this.tablero[idx][j]); break;
-          case 'der': linea.push(this.tablero[idx][TAM - 1 - j]); break;
-          case 'arr': linea.push(this.tablero[j][idx]); break;
-          case 'aba': linea.push(this.tablero[TAM - 1 - j][idx]); break;
-        }
-      }
-      const compacta = linea.filter(x => x !== 0);
-      for (let i = 0; i < compacta.length - 1; i++) {
-        if (compacta[i] === compacta[i + 1]) {
-          compacta[i] *= 2; this.puntaje += compacta[i]; compacta.splice(i + 1, 1);
-        }
-      }
-      while (compacta.length < TAM) compacta.push(0);
-      for (let j = 0; j < TAM; j++) {
-        const valor = compacta[j]; let actual;
-        switch (dir) {
-          case 'izq': actual = this.tablero[idx][j]; if (actual !== valor) movido = true; this.tablero[idx][j] = valor; break;
-          case 'der': actual = this.tablero[idx][TAM - 1 - j]; if (actual !== valor) movido = true; this.tablero[idx][TAM - 1 - j] = valor; break;
-          case 'arr': actual = this.tablero[j][idx]; if (actual !== valor) movido = true; this.tablero[j][idx] = valor; break;
-          case 'aba': actual = this.tablero[TAM - 1 - j][idx]; if (actual !== valor) movido = true; this.tablero[TAM - 1 - j][idx] = valor; break;
-        }
+// -----------------------
+// Reemplazar por esta versión de mover(dir)
+// -----------------------
+mover(dir) {
+  this.guardarEstado();
+  let movido = false;
+  const mergedValues = []; // guardará los valores resultantes de fusiones para animar después
+
+  for (let idx = 0; idx < TAM; idx++) {
+    let linea = [];
+    for (let j = 0; j < TAM; j++) {
+      switch (dir) {
+        case 'izq': linea.push(this.tablero[idx][j]); break;
+        case 'der': linea.push(this.tablero[idx][TAM - 1 - j]); break;
+        case 'arr': linea.push(this.tablero[j][idx]); break;
+        case 'aba': linea.push(this.tablero[TAM - 1 - j][idx]); break;
       }
     }
-    if (!movido) { this.historial.pop(); return; }
-    this.agregarFicha();
-    if (this.puntaje > this.mejor) {
-      this.mejor = this.puntaje; localStorage.setItem(CLAVE_MEJOR, String(this.mejor));
+
+    const compacta = linea.filter(x => x !== 0);
+    for (let i = 0; i < compacta.length - 1; i++) {
+      if (compacta[i] === compacta[i + 1]) {
+        compacta[i] *= 2;
+        this.puntaje += compacta[i];
+        // registrar valor fusionado para animar después
+        mergedValues.push(compacta[i]);
+        compacta.splice(i + 1, 1);
+      }
     }
-    this.sonido(300, 0.04); this.actualizarVista(); this.actualizarBotones(); this.guardar(); this.verificarEstado();
+
+    while (compacta.length < TAM) compacta.push(0);
+
+    for (let j = 0; j < TAM; j++) {
+      const valor = compacta[j];
+      let actual;
+      switch (dir) {
+        case 'izq':
+          actual = this.tablero[idx][j];
+          if (actual !== valor) movido = true;
+          this.tablero[idx][j] = valor;
+          break;
+        case 'der':
+          actual = this.tablero[idx][TAM - 1 - j];
+          if (actual !== valor) movido = true;
+          this.tablero[idx][TAM - 1 - j] = valor;
+          break;
+        case 'arr':
+          actual = this.tablero[j][idx];
+          if (actual !== valor) movido = true;
+          this.tablero[j][idx] = valor;
+          break;
+        case 'aba':
+          actual = this.tablero[TAM - 1 - j][idx];
+          if (actual !== valor) movido = true;
+          this.tablero[TAM - 1 - j][idx] = valor;
+          break;
+      }
+    }
   }
+
+  if (!movido) { this.historial.pop(); return; }
+
+  this.agregarFicha();
+  if (this.puntaje > this.mejor) {
+    this.mejor = this.puntaje;
+    localStorage.setItem(CLAVE_MEJOR, String(this.mejor));
+  }
+
+  this.sonido(300, 0.04);
+
+  // Actualiza vista primero (esto reposiciona y crea nodos)
+  this.actualizarVista();
+  this.actualizarBotones();
+  this.guardar();
+  this.verificarEstado();
+
+  // Después de renderizar, dispara la animación de fusión sobre los .ficha-inner correspondientes.
+  // Intentamos animar una ficha por cada valor fusionado (evita animar demasiadas).
+  if (mergedValues.length) {
+    // usar un pequeño timeout para asegurarnos que el DOM terminó de aplicar estilos
+    setTimeout(() => {
+      for (const val of mergedValues) {
+        const el = this.domTablero.querySelector(`.ficha-inner.v${val}`);
+        if (el) {
+          el.classList.add("fusion");
+          el.addEventListener("animationend", () => el.classList.remove("fusion"), { once: true });
+        }
+      }
+    }, 30);
+  }
+}
+
 
 verificarEstado() {
   const hay2048 = this.tablero.some(f => f.includes(2048));
@@ -397,7 +452,10 @@ verificarEstado() {
   ocultarFin() { this.domFin.classList.remove('mostrar'); }
 
 // -----------------------
-// Reemplazar por este actualizarVista()
+
+// -----------------------
+// -----------------------
+
 // -----------------------
 actualizarVista() {
   const rect = this.domTablero.getBoundingClientRect();
@@ -435,15 +493,16 @@ actualizarVista() {
         continue;
       }
 
-      // Si ya existe una ficha exactamente en esa posición, solo actualiza valor (fusion handled elsewhere)
+      // Si ya existe una ficha exactamente en esa posición, solo actualiza inner si cambió
       let ficha = fichasActuales.get(targetPos);
 
       if (!ficha) {
         // No existe ficha en la posición objetivo: intentar reutilizar alguna ficha vieja (mejor animación)
-        // Buscamos una ficha DOM con el mismo valor para "moverla" visualmente
+        // Buscamos una ficha DOM cuyo inner tenga el mismo valor para "moverla" visualmente
         let reutilizar = null;
         for (const [posKey, node] of fichasActuales.entries()) {
-          if (node.textContent == String(v)) { reutilizar = { posKey, node }; break; }
+          const innerNode = node.querySelector('.ficha-inner');
+          if (innerNode && innerNode.textContent == String(v)) { reutilizar = { posKey, node }; break; }
         }
 
         if (reutilizar) {
@@ -451,19 +510,27 @@ actualizarVista() {
           ficha = reutilizar.node;
           fichasActuales.delete(reutilizar.posKey);
           ficha.dataset.pos = targetPos;
+
+          // asegurarse que el inner tenga la clase correcta y el texto actualizado
+          const inner = ficha.querySelector('.ficha-inner');
+          if (inner) {
+            inner.textContent = String(v);
+            inner.className = `ficha-inner v${v}`;
+          }
         } else {
           // crear nueva ficha (aparecer)
           ficha = this.crearFicha(v, r, c);
           // crearFicha ya añade elemento al DOM y pone data-pos
-          // pero la función crearFicha ya pone tamaño y posición inicial; actualizamos transform/pos abajo
         }
       } else {
-        // Si existe, actualizamos clase/valor si cambió
-        const currentVal = Number(ficha.textContent) || 0;
+        // Si existe, actualizamos inner si cambió
+        const inner = ficha.querySelector('.ficha-inner');
+        const currentVal = inner ? Number(inner.textContent) || 0 : 0;
         if (currentVal !== v) {
-          // cambia su clase de color si fuera necesario
-          ficha.className = `ficha v${v}`;
-          ficha.textContent = v;
+          if (inner) {
+            inner.textContent = String(v);
+            inner.className = `ficha-inner v${v}`;
+          }
         }
         // quitamos del mapa porque ya está procesada
         fichasActuales.delete(targetPos);
@@ -473,7 +540,6 @@ actualizarVista() {
       ficha.dataset.pos = targetPos;
 
       // Posicionar con transform para aprovechar transition en CSS
-      // usamos translate para que la GPU lo anime mejor
       ficha.style.width = `${lado}px`;
       ficha.style.height = `${lado}px`;
       ficha.style.position = 'absolute';
@@ -507,17 +573,20 @@ actualizarVista() {
 
 
 
-// -----------------------
-// Reemplazar por este crearFicha(valor, fila, col)
+
+
 // -----------------------
 crearFicha(valor, fila, col) {
   const ficha = document.createElement("div");
-  ficha.className = `ficha v${valor}`;
-  ficha.textContent = valor;
+  ficha.className = "ficha";
+
+  const inner = document.createElement("div");
+  inner.className = `ficha-inner v${valor}`;
+  inner.textContent = valor;
+  ficha.appendChild(inner);
 
   // Identificador de posición
-  const pos = `${fila}-${col}`;
-  ficha.dataset.pos = pos;
+  ficha.dataset.pos = `${fila}-${col}`;
 
   // Calcular medidas
   const rect = this.domTablero.getBoundingClientRect();
@@ -525,30 +594,31 @@ crearFicha(valor, fila, col) {
   const hueco = 10;
   const lado = (tamTab - hueco * (TAM + 1)) / TAM;
 
-  // Aplicar tamaño
   ficha.style.width = `${lado}px`;
   ficha.style.height = `${lado}px`;
   ficha.style.position = 'absolute';
 
-  // Posición inicial (colocamos con transform)
+  // Posición inicial con transform
   const x = hueco + col * (lado + hueco);
   const y = hueco + fila * (lado + hueco);
   ficha.style.transform = `translate(${x}px, ${y}px)`;
-  ficha.style.opacity = '0';
-  ficha.style.transform += ' scale(0.9)';
 
   this.domTablero.appendChild(ficha);
 
-  // Forzar frame y hacer pop-in suave
+  // 🔥 animación de aparición en el inner
+  inner.style.transform = "scale(0.8)";
+  inner.style.opacity = "0";
   requestAnimationFrame(() => {
-    ficha.style.transition = 'transform 0.15s ease-in-out, opacity 0.12s ease';
-    ficha.style.opacity = '1';
-    // quitar scale en transform: mantenemos translate + scale removal
-    ficha.style.transform = `translate(${x}px, ${y}px) scale(1)`;
+    inner.style.transition = "transform 0.15s ease-in-out, opacity 0.12s ease";
+    inner.style.transform = "scale(1)";
+    inner.style.opacity = "1";
   });
 
   return ficha;
 }
+
+
+
 
 
 

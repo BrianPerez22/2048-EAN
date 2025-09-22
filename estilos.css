@@ -291,23 +291,24 @@ body {
 }
 
 
-/* Colores de fichas */
-.ficha.v2    { background: #e6f7e9; color: #1b5e20; }
-.ficha.v4    { background: #c8f7d4; color: #1b5e20; }
-.ficha.v8    { background: #81c784; color: #ffffff; }
-.ficha.v16   { background: #4caf50; color: #ffffff; }
-.ficha.v32   { background: #2e7d32; color: #ffffff; }
-.ficha.v64   { background: #1b5e20; color: #ffffff; }
-.ficha.v128  { background: #2AA589; color: #ffffff; font-size: 1.7rem; }
-.ficha.v256  { background: #008272; color: #ffffff; font-size: 1.7rem; }
-.ficha.v512  { background: #005C4D; color: #ffffff; font-size: 1.7rem; }
-.ficha.v1024 { background: #003B4C; color: #ffffff; font-size: 1.5rem; }
-.ficha.v2048 { background: #2bbbad; color: #ffffff; font-size: 1.5rem; box-shadow: 0 0 20px rgba(43,187,173,0.7); }
-.ficha.v4096 { background: #5C2AB2; color: #ffffff; font-size: 1.5rem; box-shadow: 0 0 25px rgba(92,42,178,0.8); }
-.ficha.v8192 { background: #892AB2; color: #ffffff; font-size: 1.5rem; box-shadow: 0 0 30px rgba(137,42,178,0.85); }
-.ficha.v16384 { background: #B22A89; color: #ffffff; font-size: 1.4rem; box-shadow: 0 0 35px rgba(178,42,137,0.9); }
-.ficha.v32768 { background: #B22A5C; color: #ffffff; font-size: 1.4rem; box-shadow: 0 0 40px rgba(178,42,92,0.9); }
-.ficha.v65536 { background: #000000; color: #ffffff; font-size: 1.3rem; box-shadow: 0 0 45px rgba(255,255,255,0.8); }
+/* Colores de fichas (válido tanto para el tutorial como para el juego) */
+.ficha.v2,    .ficha-inner.v2    { background: #e6f7e9; color: #1b5e20; }
+.ficha.v4,    .ficha-inner.v4    { background: #c8f7d4; color: #1b5e20; }
+.ficha.v8,    .ficha-inner.v8    { background: #81c784; color: #ffffff; }
+.ficha.v16,   .ficha-inner.v16   { background: #4caf50; color: #ffffff; }
+.ficha.v32,   .ficha-inner.v32   { background: #2e7d32; color: #ffffff; }
+.ficha.v64,   .ficha-inner.v64   { background: #1b5e20; color: #ffffff; }
+.ficha.v128,  .ficha-inner.v128  { background: #2AA589; color: #ffffff; font-size: 1.7rem; }
+.ficha.v256,  .ficha-inner.v256  { background: #008272; color: #ffffff; font-size: 1.7rem; }
+.ficha.v512,  .ficha-inner.v512  { background: #005C4D; color: #ffffff; font-size: 1.7rem; }
+.ficha.v1024, .ficha-inner.v1024 { background: #003B4C; color: #ffffff; font-size: 1.5rem; }
+.ficha.v2048, .ficha-inner.v2048 { background: #2bbbad; color: #ffffff; font-size: 1.5rem; box-shadow: 0 0 20px rgba(43,187,173,0.7); }
+.ficha.v4096, .ficha-inner.v4096 { background: #5C2AB2; color: #ffffff; font-size: 1.5rem; box-shadow: 0 0 25px rgba(92,42,178,0.8); }
+.ficha.v8192, .ficha-inner.v8192 { background: #892AB2; color: #ffffff; font-size: 1.5rem; box-shadow: 0 0 30px rgba(137,42,178,0.85); }
+.ficha.v16384,.ficha-inner.v16384{ background: #B22A89; color: #ffffff; font-size: 1.4rem; box-shadow: 0 0 35px rgba(178,42,137,0.9); }
+.ficha.v32768,.ficha-inner.v32768{ background: #B22A5C; color: #ffffff; font-size: 1.4rem; box-shadow: 0 0 40px rgba(178,42,92,0.9); }
+.ficha.v65536,.ficha-inner.v65536{ background: #000000; color: #ffffff; font-size: 1.3rem; box-shadow: 0 0 45px rgba(255,255,255,0.8); }
+
 
 /* Instrucciones */
 .instrucciones {
@@ -1512,3 +1513,52 @@ body {
   margin-right: auto;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
+
+/* Animación de fusión (pop) */
+@keyframes fusion-pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.25); }
+  60%  { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+.fusion {
+  animation: fusion-pop 0.25s ease-in-out;
+}
+
+/* Contenedor general de la ficha */
+.ficha {
+  position: absolute;
+  border-radius: 10px;
+  aspect-ratio: 1;
+  z-index: 1;
+  user-select: none;
+  -webkit-user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* 🔥 Movimiento entre celdas */
+  transition: transform 0.15s ease-in-out;
+}
+
+/* Contenido interno que maneja pop-in */
+.ficha-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+
+  /* 🔥 Animación de aparición */
+  transition: transform 0.15s ease-in-out, opacity 0.12s ease;
+}
+
+.ficha { transition: transform 0.18s ease-in-out; will-change: transform; }
+.ficha-inner { transition: transform 0.15s ease-in-out, opacity 0.12s ease; }
+@keyframes fusion-pop { 0%{transform:scale(1)}40%{transform:scale(1.25)}60%{transform:scale(0.95)}100%{transform:scale(1)} }
+.fusion { animation: fusion-pop 0.25s ease-in-out; }
