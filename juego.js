@@ -396,52 +396,161 @@ verificarEstado() {
 
   ocultarFin() { this.domFin.classList.remove('mostrar'); }
 
+// -----------------------
+// Reemplazar por este actualizarVista()
+// -----------------------
 actualizarVista() {
-  this.domTablero.querySelectorAll('.ficha').forEach(f => f.remove());
-  for (let r = 0; r < TAM; r++) for (let c = 0; c < TAM; c++) {
-    const v = this.tablero[r][c]; if (v !== 0) this.crearFicha(v, r, c);
+  const rect = this.domTablero.getBoundingClientRect();
+  const tamTab = rect.width;
+  const hueco = 10;
+  const lado = (tamTab - hueco * (TAM + 1)) / TAM;
+
+  // Mapa de fichas DOM actuales por su position actual "r-c"
+  const fichasActuales = new Map();
+  this.domTablero.querySelectorAll('.ficha').forEach(f => {
+    const pos = f.dataset.pos;
+    if (pos) fichasActuales.set(pos, f);
+  });
+
+  let totalFichas = 0;
+
+  // Recorre el tablero y actualiza/crea fichas
+  for (let r = 0; r < TAM; r++) {
+    for (let c = 0; c < TAM; c++) {
+      const v = this.tablero[r][c];
+
+      if (v !== 0) totalFichas++;
+
+      const targetPos = `${r}-${c}`;
+      const x = hueco + c * (lado + hueco);
+      const y = hueco + r * (lado + hueco);
+
+      if (v === 0) {
+        // si hay una ficha DOM en esa posición que ya no corresponde, bórrala
+        const exist = fichasActuales.get(targetPos);
+        if (exist) {
+          exist.remove();
+          fichasActuales.delete(targetPos);
+        }
+        continue;
+      }
+
+      // Si ya existe una ficha exactamente en esa posición, solo actualiza valor (fusion handled elsewhere)
+      let ficha = fichasActuales.get(targetPos);
+
+      if (!ficha) {
+        // No existe ficha en la posición objetivo: intentar reutilizar alguna ficha vieja (mejor animación)
+        // Buscamos una ficha DOM con el mismo valor para "moverla" visualmente
+        let reutilizar = null;
+        for (const [posKey, node] of fichasActuales.entries()) {
+          if (node.textContent == String(v)) { reutilizar = { posKey, node }; break; }
+        }
+
+        if (reutilizar) {
+          // reasignar ese nodo al nuevo targetPos
+          ficha = reutilizar.node;
+          fichasActuales.delete(reutilizar.posKey);
+          ficha.dataset.pos = targetPos;
+        } else {
+          // crear nueva ficha (aparecer)
+          ficha = this.crearFicha(v, r, c);
+          // crearFicha ya añade elemento al DOM y pone data-pos
+          // pero la función crearFicha ya pone tamaño y posición inicial; actualizamos transform/pos abajo
+        }
+      } else {
+        // Si existe, actualizamos clase/valor si cambió
+        const currentVal = Number(ficha.textContent) || 0;
+        if (currentVal !== v) {
+          // cambia su clase de color si fuera necesario
+          ficha.className = `ficha v${v}`;
+          ficha.textContent = v;
+        }
+        // quitamos del mapa porque ya está procesada
+        fichasActuales.delete(targetPos);
+      }
+
+      // Asegurar que dataset.pos esté correcto
+      ficha.dataset.pos = targetPos;
+
+      // Posicionar con transform para aprovechar transition en CSS
+      // usamos translate para que la GPU lo anime mejor
+      ficha.style.width = `${lado}px`;
+      ficha.style.height = `${lado}px`;
+      ficha.style.position = 'absolute';
+      ficha.style.transform = `translate(${x}px, ${y}px)`;
+      // quitar left/top si existían (evita conflicto)
+      ficha.style.left = '';
+      ficha.style.top = '';
+    }
   }
+
+  // Eliminar cualquier ficha DOM que haya quedado "sobrante" (esto limpia merges/antiguas)
+  fichasActuales.forEach(node => node.remove());
+
+  // Actualizar marcadores
   this.domPuntaje.textContent = this.puntaje;
   this.domMejor.textContent = this.mejor;
 
-  // 🔹 Nuevo: contar fichas
-if (this.domFichas) {
-  let totalFichas = 0;
-  for (let r = 0; r < TAM; r++) {
-    for (let c = 0; c < TAM; c++) {
-      if (this.tablero[r][c] !== 0) totalFichas++;
-    }
+  // Actualizar contador de fichas (si existe el elemento)
+  if (this.domFichas) this.domFichas.textContent = totalFichas;
+
+  // Resplandor según cantidad de fichas (usa totalFichas calculado)
+  this.domTablero.classList.remove("alerta14", "alerta15", "alerta16");
+  if (totalFichas === 14) {
+    this.domTablero.classList.add("alerta14");
+  } else if (totalFichas === 15) {
+    this.domTablero.classList.add("alerta15");
+  } else if (totalFichas === 16) {
+    this.domTablero.classList.add("alerta16");
   }
-  this.domFichas.textContent = totalFichas;
-
-// 🔥 Resplandor según cantidad de fichas
-this.domTablero.classList.remove("alerta14", "alerta15", "alerta16");
-
-if (totalFichas === 14) {
-  this.domTablero.classList.add("alerta14");
-} else if (totalFichas === 15) {
-  this.domTablero.classList.add("alerta15");
-} else if (totalFichas === 16) {
-  this.domTablero.classList.add("alerta16");
-}
-
-}
-
 }
 
 
-  crearFicha(valor, fila, col) {
-    const ficha = document.createElement('div');
-    ficha.className = `ficha v${valor}`;
-    ficha.textContent = valor;
-    const rect = this.domTablero.getBoundingClientRect();
-    const tamTab = rect.width; const hueco = 10;
-    const lado = (tamTab - hueco * (TAM + 1)) / TAM;
-    ficha.style.width = `${lado}px`; ficha.style.height = `${lado}px`;
-    ficha.style.left = `${hueco + col * (lado + hueco)}px`;
-    ficha.style.top  = `${hueco + fila * (lado + hueco)}px`;
-    this.domTablero.appendChild(ficha);
-  }
+
+// -----------------------
+// Reemplazar por este crearFicha(valor, fila, col)
+// -----------------------
+crearFicha(valor, fila, col) {
+  const ficha = document.createElement("div");
+  ficha.className = `ficha v${valor}`;
+  ficha.textContent = valor;
+
+  // Identificador de posición
+  const pos = `${fila}-${col}`;
+  ficha.dataset.pos = pos;
+
+  // Calcular medidas
+  const rect = this.domTablero.getBoundingClientRect();
+  const tamTab = rect.width;
+  const hueco = 10;
+  const lado = (tamTab - hueco * (TAM + 1)) / TAM;
+
+  // Aplicar tamaño
+  ficha.style.width = `${lado}px`;
+  ficha.style.height = `${lado}px`;
+  ficha.style.position = 'absolute';
+
+  // Posición inicial (colocamos con transform)
+  const x = hueco + col * (lado + hueco);
+  const y = hueco + fila * (lado + hueco);
+  ficha.style.transform = `translate(${x}px, ${y}px)`;
+  ficha.style.opacity = '0';
+  ficha.style.transform += ' scale(0.9)';
+
+  this.domTablero.appendChild(ficha);
+
+  // Forzar frame y hacer pop-in suave
+  requestAnimationFrame(() => {
+    ficha.style.transition = 'transform 0.15s ease-in-out, opacity 0.12s ease';
+    ficha.style.opacity = '1';
+    // quitar scale en transform: mantenemos translate + scale removal
+    ficha.style.transform = `translate(${x}px, ${y}px) scale(1)`;
+  });
+
+  return ficha;
+}
+
+
 
   actualizarBotones() { this.botonDeshacer.disabled = this.historial.length === 0; }
 
