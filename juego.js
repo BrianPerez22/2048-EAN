@@ -76,23 +76,78 @@ class Juego2048 {
   // ---------------------------------------------------
   // Eventos de UI
   // ---------------------------------------------------
-  configurarEventos() {
-  // teclado
+// Reemplaza la función configurarEventos() en tu juego.js
+
+configurarEventos() {
+  // Teclado con controles mejorados para PC
   document.addEventListener('keydown', (e) => {
+    // Deshacer con Ctrl+Z, R o Supr/Delete
     if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z')) {
-      this.deshacer(); e.preventDefault(); return;
+      this.deshacer(); 
+      e.preventDefault(); 
+      return;
     }
+    
+    // Nuevos controles de deshacer para PC
+    if (e.key === 'r' || e.key === 'R' || e.key === 'Delete') {
+      this.deshacer();
+      e.preventDefault();
+      return;
+    }
+    
+    // Reiniciar con Ctrl+R (opcional)
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'r' || e.key === 'R')) {
+      this.reiniciar();
+      e.preventDefault();
+      return;
+    }
+    
+    // Movimientos (mantenemos los existentes)
     const mapa = {
       'ArrowLeft':'izq','a':'izq','A':'izq',
       'ArrowRight':'der','d':'der','D':'der',
       'ArrowUp':'arr','w':'arr','W':'arr',
       'ArrowDown':'aba','s':'aba','S':'aba'
     };
+    
     const dir = mapa[e.key];
-    if (dir) { e.preventDefault(); this.mover(dir); }
+    if (dir) { 
+      e.preventDefault(); 
+      this.mover(dir); 
+    }
+    
+    // Control extra para PC - Espacio para nuevo juego
+    if (e.key === ' ' || e.key === 'Spacebar') {
+      if (this.terminado || confirm('¿Iniciar nueva partida?')) {
+        this.reiniciar();
+      }
+      e.preventDefault();
+      return;
+    }
+    
+    // Escape para cerrar overlay
+    if (e.key === 'Escape') {
+      if (this.domFin.classList.contains('mostrar')) {
+        if (this.ganado && !this.terminado) {
+          // Si ganó pero puede continuar
+          this.ocultarFin();
+          this.ganado = false;
+          this.continuarDespuesVictoria = true;
+        }
+      }
+      e.preventDefault();
+      return;
+    }
+    
+    // Toggle sonido con M
+    if (e.key === 'm' || e.key === 'M') {
+      this.toggleSonido();
+      e.preventDefault();
+      return;
+    }
   });
 
-  // gestos touch
+  // Gestos touch (mantener igual)
   if (this.domTablero) {
     this.domTablero.addEventListener('touchstart', (e) => {
       if (e.touches.length > 1) return;
@@ -113,28 +168,23 @@ class Juego2048 {
     }, { passive: true });
   }
 
-  // botones
+  // Botones (mantener igual)
   if (this.botonDeshacer) this.botonDeshacer.addEventListener('click', () => this.deshacer());
 
-  // Botón REINICIAR (desde la UI normal) -> llama a reiniciar()
   const btnReiniciar = document.getElementById("btn-reiniciar");
   if (btnReiniciar) {
     btnReiniciar.addEventListener("click", () => {
-      this.reiniciar(); // reiniciar() maneja confirm y guardado SOLO si confirma
+      this.reiniciar();
     });
   }
 
-// Continuar (overlay)
-const btnContinuar = document.getElementById('btn-continuar');
-if (btnContinuar) btnContinuar.addEventListener('click', () => {
-  this.ocultarFin();
-  this.ganado = false;                  // salir del estado de victoria
-  this.continuarDespuesVictoria = true; // evita que el popup se repita
-});
+  const btnContinuar = document.getElementById('btn-continuar');
+  if (btnContinuar) btnContinuar.addEventListener('click', () => {
+    this.ocultarFin();
+    this.ganado = false;
+    this.continuarDespuesVictoria = true;
+  });
 
-
-  // Botón JUGAR DE NUEVO (overlay) -> reiniciar sin guardar/preguntar,
-  // porque mostrarFin() ya guardó el score cuando terminó la partida.
   const btnReiniciar2 = document.getElementById("btn-reiniciar2");
   if (btnReiniciar2) {
     btnReiniciar2.addEventListener("click", () => {
@@ -146,7 +196,7 @@ if (btnContinuar) btnContinuar.addEventListener('click', () => {
     });
   }
 
-  // miniscore
+  // Miniscore
   if (this.btnVerMas) {
     this.btnVerMas.addEventListener('click', () => {
       this.mostrandoTodo = !this.mostrandoTodo;
