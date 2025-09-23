@@ -24,6 +24,7 @@ class Juego2048 {
     this.mejor = Number(localStorage.getItem(CLAVE_MEJOR) || 0);
     this.ganado = false;
     this.terminado = false;
+    this.perdidoTemporal = false; // Nuevo estado: perdió pero aún puede deshacer
     this.historial = [];
     this.maxDeshacer = 6;
     this.sonidoActivo = true;
@@ -133,6 +134,9 @@ configurarEventos() {
           this.ocultarFin();
           this.ganado = false;
           this.continuarDespuesVictoria = true;
+        } else if (this.perdidoTemporal) {
+          // Si perdió temporalmente, permitir cerrar con Escape
+          this.ocultarFin();
         }
       }
       e.preventDefault();
@@ -178,21 +182,41 @@ configurarEventos() {
     });
   }
 
+  // 🆕 Botón continuar modificado - ahora también funciona como "deshacer" cuando perdió temporalmente
   const btnContinuar = document.getElementById('btn-continuar');
-  if (btnContinuar) btnContinuar.addEventListener('click', () => {
-    this.ocultarFin();
-    this.ganado = false;
-    this.continuarDespuesVictoria = true;
-  });
+  if (btnContinuar) {
+    btnContinuar.addEventListener('click', () => {
+      if (this.perdidoTemporal) {
+        // Si perdió temporalmente, usar deshacer
+        this.deshacer();
+      } else if (this.ganado) {
+        // Continuar después de ganar
+        this.ocultarFin();
+        this.ganado = false;
+        this.continuarDespuesVictoria = true;
+      }
+    });
+  }
 
+  // 🆕 Botón reiniciar2 modificado - ahora maneja la confirmación final
   const btnReiniciar2 = document.getElementById("btn-reiniciar2");
   if (btnReiniciar2) {
     btnReiniciar2.addEventListener("click", () => {
-      this.nuevo();
-      this.actualizarVista();
-      this.actualizarBotones();
-      this.ocultarFin();
-      this.guardar();
+      if (this.perdidoTemporal) {
+        // Si perdió temporalmente, confirmar fin y agregar al historial
+        this.terminado = true;
+        this.perdidoTemporal = false;
+        this.agregarAlHistorial(this.puntaje);
+        // Actualizar el modal para mostrar fin definitivo
+        this.mostrarFin();
+      } else {
+        // Reinicio normal
+        this.nuevo();
+        this.actualizarVista();
+        this.actualizarBotones();
+        this.ocultarFin();
+        this.guardar();
+      }
     });
   }
 
@@ -258,21 +282,25 @@ overlay.innerHTML = `
     if (this.historial.length > this.maxDeshacer) this.historial.shift();
   }
 
-  deshacer() {
-    if (this.historial.length === 0) return;
-    const previo = this.historial.pop();
-    this.tablero = copiarMatriz(previo.tablero);
-    this.puntaje = previo.puntaje;
-    this.ganado = false; this.terminado = false;
-    this.actualizarVista(); this.actualizarBotones(); this.guardar();
-    this.sonido(200, 0.04);
-  }
-
-  nuevo() {
-    this.tablero = matrizVacia(); this.puntaje = 0;
-    this.ganado = false; this.terminado = false; this.historial = [];
-    this.agregarFicha(); this.agregarFicha();
-  }
+deshacer() {
+  if (this.historial.length === 0) return;
+  const previo = this.historial.pop();
+  this.tablero = copiarMatriz(previo.tablero);
+  this.puntaje = previo.puntaje;
+  this.ganado = false; 
+  this.terminado = false;
+  this.perdidoTemporal = false; // Resetear estado de pérdida temporal
+  this.ocultarFin(); // Ocultar overlay si estaba visible
+  this.actualizarVista(); 
+  this.actualizarBotones(); 
+  this.guardar();
+  this.sonido(200, 0.04);
+}
+nuevo() {
+  this.tablero = matrizVacia(); this.puntaje = 0;
+  this.ganado = false; this.terminado = false; this.perdidoTemporal = false; this.historial = [];
+  this.agregarFicha(); this.agregarFicha();
+}
 
 reiniciar() {
   if (this.puntaje > 0) {
@@ -312,6 +340,8 @@ reiniciar() {
 // Reemplazar por esta versión de mover(dir)
 // -----------------------
 mover(dir) {
+  // Si perdió temporalmente, no permitir movimientos (solo deshacer)
+if (this.perdidoTemporal) return;
   this.guardarEstado();
   let movido = false;
   const mergedValues = []; // guardará los valores resultantes de fusiones para animar después
@@ -411,9 +441,9 @@ verificarEstado() {
     return;
   }
 
-  // Si no hay más movimientos, fin del juego
+  // Si no hay más movimientos, pérdida temporal (aún puede deshacer)
   if (this.esFin()) {
-    this.terminado = true;
+    this.perdidoTemporal = true; // Marcar como pérdida temporal
     setTimeout(() => this.mostrarFin(), 300);
   }
 }
@@ -431,23 +461,35 @@ verificarEstado() {
     }
     return true;
   }
-
-  mostrarFin() {
-    const texto = document.getElementById('texto-superior');
-    const mensaje = document.getElementById('mensaje-fin');
-    const btn = document.getElementById('btn-continuar');
-    if (this.ganado) {
-      texto.textContent = '¡Llegaste a 2048 🎉!';
-      mensaje.textContent = 'Puedes seguir jugando o reiniciar.';
-      btn.style.display = 'inline-block';
-    } else {
-      texto.textContent = '¡Fin del juego!';
-      mensaje.innerHTML = `Puntaje final: <span id="puntaje-final">${this.puntaje}</span>`;
-      btn.style.display = 'none';
-    }
-    this.domFin.classList.add('mostrar');
-    this.agregarAlHistorial(this.puntaje);
+mostrarFin() {
+  const texto = document.getElementById('texto-superior');
+  const mensaje = document.getElementById('mensaje-fin');
+  const btnContinuar = document.getElementById('btn-continuar');
+  const btnReiniciar = document.getElementById('btn-reiniciar2');
+  
+  if (this.ganado) {
+    texto.textContent = '¡Llegaste a 2048 🎉!';
+    mensaje.textContent = 'Puedes seguir jugando o reiniciar.';
+    btnContinuar.style.display = 'inline-block';
+    btnContinuar.textContent = 'Continuar';
+    btnReiniciar.textContent = 'Reiniciar';
+  } else if (this.perdidoTemporal) {
+    // Estado de pérdida temporal - aún puede deshacer
+    texto.textContent = '¡Sin movimientos disponibles!';
+    mensaje.innerHTML = `¿Quieres deshacer o finalizar?<br>Puntaje actual: <span>${this.puntaje}</span>`;
+    btnContinuar.style.display = 'inline-block';
+    btnContinuar.textContent = 'Deshacer último movimiento';
+    btnReiniciar.textContent = 'Finalizar partida';
+  } else {
+    // Fin definitivo (cuando ya confirmó)
+    texto.textContent = '¡Fin del juego!';
+    mensaje.innerHTML = `Puntaje final: <span id="puntaje-final">${this.puntaje}</span>`;
+    btnContinuar.style.display = 'none';
+    btnReiniciar.textContent = 'Nueva partida';
   }
+  
+  this.domFin.classList.add('mostrar');
+}
 
   ocultarFin() { this.domFin.classList.remove('mostrar'); }
 
@@ -639,6 +681,7 @@ crearFicha(valor, fila, col) {
   guardar() {
     try {
       const estado = {
+        perdidoTemporal: this.perdidoTemporal, // Guardar estado de pérdida temporal
         tablero: this.tablero, puntaje: this.puntaje, mejor: this.mejor,
         historial: this.historial, maxDeshacer: this.maxDeshacer, sonidoActivo: this.sonidoActivo
       };
@@ -655,6 +698,7 @@ crearFicha(valor, fila, col) {
       this.puntaje = estado.puntaje || 0;
       this.mejor = estado.mejor || this.mejor;
       this.historial = estado.historial || [];
+      this.perdidoTemporal = estado.perdidoTemporal || false; // Cargar estado de pérdida temporal
       if (estado.maxDeshacer) this.maxDeshacer = estado.maxDeshacer;
       if (estado.sonidoActivo !== undefined) this.sonidoActivo = estado.sonidoActivo;
       return true;
