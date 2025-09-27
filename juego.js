@@ -4,7 +4,28 @@
 const TAM = 4;
 const CLAVE_ESTADO   = '2048_ean_estado';
 const CLAVE_MEJOR    = '2048_ean_mejor';
-const CLAVE_HISTORIAL = '2048_scores';   // Clave local para el miniscore
+const CLAVE_HISTORIAL = '2048_scores';   // Fallback local para el miniscore
+
+// =====================================================
+// 🔗 AWS API (CAMBIA ESTA URL)
+// =====================================================
+const API_BASE = "https://9g0v6cib0g.execute-api.us-east-1.amazonaws.com";
+
+async function apiGuardarPuntajeAWS({ nombre, puntaje }) {
+  const res = await fetch(`${API_BASE}/scores`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nombre, puntaje })
+  });
+  if (!res.ok) throw new Error(`POST /scores -> ${res.status}`);
+  return res.json();
+}
+
+async function apiObtenerTopAWS(limit = 5) {
+  const res = await fetch(`${API_BASE}/scores/top?limit=${limit}`);
+  if (!res.ok) throw new Error(`GET /scores/top -> ${res.status}`);
+  return res.json();
+}
 
 // =====================================================
 // Utilidades
@@ -66,7 +87,7 @@ class Juego2048 {
 
     this.actualizarVista();
     this.actualizarBotones();
-    this.cargarHistorialMiniScore();
+    this.cargarHistorialMiniScore(); // Carga Top 5 al iniciar
   }
 
   iniciarAudio() {
@@ -663,7 +684,6 @@ crearFicha(valor, fila, col) {
 
 
 
-
   actualizarBotones() { this.botonDeshacer.disabled = this.historial.length === 0; }
 
   sonido(freq, dur = 0.06) {
@@ -705,68 +725,50 @@ crearFicha(valor, fila, col) {
     } catch { return false; }
   }
 
-  // ===================================================
-  // MiniScore (actualmente local, fácil de portar a AWS)
-  // ===================================================
- agregarAlHistorial(puntos) {
-  let nombre = prompt("Escribe tu nombre:", "Jugador");
-  if (!nombre) nombre = "Jugador";
+   // =========================
+  // Guardar puntaje en AWS
+  // =========================
+  agregarAlHistorial(puntos) {
+    let nombre = prompt("Escribe tu nombre:", "Jugador");
+    if (!nombre) nombre = "Jugador";
 
-  const registro = { id: generarId(), nombre, puntaje: puntos };
+    // Solo nube
+    apiGuardarPuntajeAWS({ nombre, puntaje: puntos })
+      .then(() => this.cargarHistorialMiniScore())
+      .catch((e) => console.error("Error guardando en AWS:", e));
+  }
 
-  // === HOY === almacenamiento local
-  let lista = JSON.parse(localStorage.getItem(CLAVE_HISTORIAL) || '[]');
+  // =========================
+  // Cargar ranking desde AWS
+  // =========================
+  cargarHistorialMiniScore() {
+    apiObtenerTopAWS(5)
+      .then((datos) => {
+        this.datosMiniScore = Array.isArray(datos)
+          ? datos.map(d => ({ nombre: d.nombre, puntaje: d.puntaje }))
+          : [];
+        this.renderMiniScore();
+      })
+      .catch((e) => {
+        console.error("Error cargando Top 5 desde AWS:", e);
+        this.datosMiniScore = [];
+        this.renderMiniScore();
+      });
+  }
 
-  // Agregar nuevo puntaje
-  lista.push(registro);
+  renderMiniScore() {
+    if (!this.listaScores) return;
+    this.listaScores.innerHTML = '';
+    const limite = this.mostrandoTodo ? 10 : 5;
 
-  // Ordenar de mayor a menor por puntaje
-  lista.sort((a, b) => b.puntaje - a.puntaje);
+    this.datosMiniScore.slice(0, limite).forEach((item, index) => {
+      const li = document.createElement('li');
+      li.innerHTML = `<span>${index + 1}° ${item.nombre}</span><span>${item.puntaje} pts</span>`;
+      this.listaScores.appendChild(li);
+    });
 
-  // Mantener solo los 10 mejores
-  if (lista.length > 10) lista = lista.slice(0, 10);
-
-  // Guardar de nuevo
-  localStorage.setItem(CLAVE_HISTORIAL, JSON.stringify(lista));
-
-  // Actualizar mini-score
-  this.cargarHistorialMiniScore();
-
-  /* === MAÑANA EN AWS ===
-  fetch("https://tu-api.execute-api.aws-region.amazonaws.com/scores", {
-    method: "POST",
-    headers: { "Content-Type":"application/json" },
-    body: JSON.stringify(registro)
-  }).then(()=> this.cargarHistorialMiniScore());
-  */
-}
-
-cargarHistorialMiniScore() {
-  // === HOY ===
-  this.datosMiniScore = JSON.parse(localStorage.getItem(CLAVE_HISTORIAL) || '[]');
-  this.renderMiniScore();
-
-  /* === MAÑANA EN AWS ===
-  fetch("https://tu-api.../scores")
-    .then(r=>r.json())
-    .then(datos=>{ this.datosMiniScore = datos; this.renderMiniScore(); })
-    .catch(()=>{ this.datosMiniScore = []; });
-  */
-}
-
-renderMiniScore() {
-  if (!this.listaScores) return;
-  this.listaScores.innerHTML = '';
-  const limite = this.mostrandoTodo ? 10 : 3;
-
-  this.datosMiniScore.slice(0, limite).forEach((item, index) => {
-    const li = document.createElement('li');
-    li.innerHTML = `<span>${index + 1}° ${item.nombre}</span><span>${item.puntaje} pts</span>`;
-    this.listaScores.appendChild(li);
-  });
-
-  this.btnVerMas.style.display = (this.datosMiniScore.length > 3) ? 'inline-block' : 'none';
-}
+    this.btnVerMas.style.display = (this.datosMiniScore.length > 5) ? 'inline-block' : 'none';
+  }
 }
 
 // -----------------------------------------------------
