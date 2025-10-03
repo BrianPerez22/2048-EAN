@@ -7,6 +7,63 @@ const CLAVE_MEJOR    = '2048_ean_mejor';
 const CLAVE_HISTORIAL = '2048_scores';   // Fallback local para el miniscore
 
 // =====================================================
+// Filtro de palabras inapropiadas
+// =====================================================
+const PALABRAS_PROHIBIDAS = [
+  // Las que ya tienes
+  'puto', 'puta', 'mierda', 'joder', 'coño', 'cabrón', 'cabron', 'pene',
+  'pendejo', 'pendeja', 'idiota', 'estúpido', 'estupido', 'imbécil', 'imbecil',
+  'marica', 'maricon', 'maricón', 'negro', 'negra', 'gordo', 'gorda', 'feo', 'fea',
+  'hitler', 'nazi', 'drogas', 'cocaína', 'cocaina', 'marihuana',
+  'p3nd3j0', 'p3nd3ja', 'm13rd4', 'c4br0n', 'put0', 'put4',
+
+  'culero', 'culo', 'chingar', 'chingada', 'chingado',
+  'zorra', 'perra', 'perro', 'basura',
+  'gilipollas', 'tarado', 'baboso', 'asqueroso', 'asquerosa',
+
+  'gonorrea', 'pirobo', 'piroba', 'carechimba', 'hijueputa', 'hijueputas',
+  'hp', 'güevón', 'guevon', 'weon', 'weona', 'gonorreita',
+  'malparido', 'malparida', 'sapoperra', 'cacorro', 'chimbo',
+  'maricada', 'lagarto', 'ñero', 'ñera',
+
+  'universidad ean', 'uaniversidad ean', 'uan ean', 'ean hijueputa', 'ean gonorrea',
+  'ean mierda', 'muerte ean', 'fuck ean', 'ean basura'
+];
+
+function limpiarTexto(texto) {
+  return texto.toLowerCase()
+    .replace(/[áàäâ]/g, 'a').replace(/[éèëê]/g, 'e').replace(/[íìïî]/g, 'i')
+    .replace(/[óòöô]/g, 'o').replace(/[úùüû]/g, 'u').replace(/ñ/g, 'n')
+    .replace(/[0]/g, 'o').replace(/[1]/g, 'i').replace(/[3]/g, 'e')
+    .replace(/[4]/g, 'a').replace(/[5]/g, 's').replace(/[7]/g, 't')
+    .replace(/[@]/g, 'a').replace(/[!]/g, 'i').replace(/[$]/g, 's')
+    .replace(/[^a-z\s]/g, '');
+}
+
+function esNombreInapropiado(nombre) {
+  const nombreLimpio = limpiarTexto(nombre.trim());
+  if (nombreLimpio.length === 0 || nombreLimpio.length > 20) return true;
+  return PALABRAS_PROHIBIDAS.some(palabra => 
+    nombreLimpio.includes(palabra) || nombreLimpio.replace(/\s/g, '').includes(palabra)
+  );
+}
+
+function solicitarNombreValido() {
+  let intentos = 0;
+  while (intentos < 3) {
+    let nombre = prompt(
+      intentos === 0 ? "Escribe tu nombre:" : "Nombre no válido. Intenta con otro nombre:",
+      "Jugador"
+    );
+    if (!nombre) return "Jugador";
+    nombre = nombre.trim();
+    if (!esNombreInapropiado(nombre)) return nombre;
+    intentos++;
+  }
+  return "Jugador" + Math.floor(Math.random() * 1000);
+}
+
+// =====================================================
 // 🔗 AWS API (CAMBIA ESTA URL)
 // =====================================================
 const API_BASE = "https://9g0v6cib0g.execute-api.us-east-1.amazonaws.com";
@@ -726,11 +783,10 @@ crearFicha(valor, fila, col) {
   }
 
    // =========================
-  // Guardar puntaje en AWS
+  // Guardar puntaje en AWS (con filtro)
   // =========================
   agregarAlHistorial(puntos) {
-    let nombre = prompt("Escribe tu nombre:", "Jugador");
-    if (!nombre) nombre = "Jugador";
+    const nombre = solicitarNombreValido();
 
     // Solo nube
     apiGuardarPuntajeAWS({ nombre, puntaje: puntos })
