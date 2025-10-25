@@ -862,11 +862,14 @@ body {
 }
 
 .meli-img {
+  display: block;              
   max-width: 200px;
+  width: 100%;                
   height: auto;
+  margin: 0 auto;            
   cursor: pointer;
   transition: transform 0.2s ease;
-  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.25)); /* sombra detrás */
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.25));
 }
 
 /* Animación de rebote al hacer clic */
