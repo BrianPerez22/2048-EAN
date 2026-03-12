@@ -259,7 +259,7 @@
   .tutorial-desktop .carrusel-item {
     flex: 0 0 100%;
     display: none;
-    background: white;
+    background: var(--color-card, white);
     border-radius: var(--radio-base);
     padding: 20px;
     text-align: center;
@@ -282,14 +282,14 @@
     font-size: 1rem;
     line-height: 1.5;
     margin-bottom: 15px;
-    color: #444;
+    color: var(--color-texto-card, #444);
   }
 
   .tutorial-desktop .carrusel-item ul {
     text-align: left;
     max-width: 350px;
     margin: 0 auto;
-    color: #444;
+    color: var(--color-texto-card, #444);
   }
 
   .tutorial-desktop .mini-tablero {
@@ -306,7 +306,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #cdc1b4;
+    background: var(--color-mini-celda, #cdc1b4);
     border-radius: 3px;
     font-weight: bold;
   }
@@ -327,7 +327,7 @@
   .tutorial-desktop .instrucciones-tutorial { order: 1; }
 
   .tutorial-desktop .instrucciones-tutorial {
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--color-card, rgba(255, 255, 255, 0.95));
     border-radius: 15px;
     padding: 20px;
     width: 100%;
@@ -337,7 +337,7 @@
 
   .tutorial-desktop .instrucciones-tutorial p {
     font-size: 0.9rem;
-    color: #444;
+    color: var(--color-texto-card, #444);
     line-height: 1.4;
     margin-bottom: 15px;
   }
@@ -356,8 +356,8 @@
 
   /* Cajón de consejos (estilo dibujado) */
   .tutorial-desktop .info-tutorial {
-    border: 2px dashed #444;
-    background: #fffefc;
+    border: 2px dashed var(--color-borde-dibujado, #444);
+    background: var(--color-card-dibujada, #fffefc);
     border-radius: var(--radio-base);
     padding: 20px;
     width: 100%;
@@ -375,7 +375,7 @@
 
   .tutorial-desktop .info-tutorial p {
     font-size: 0.85rem;
-    color: #444;
+    color: var(--color-texto-card, #444);
     line-height: 1.3;
     margin-bottom: 8px;
   }

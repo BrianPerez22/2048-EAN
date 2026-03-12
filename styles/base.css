@@ -19,6 +19,17 @@
   --sombra-card:       0 15px 35px rgba(0, 0, 0, 0.1);
   --grad-body:         linear-gradient(135deg, #4ade80 0%, #22d3ee 50%, #3b82f6 100%);
   --transicion-base:   all 0.3s ease;
+
+  /* ── Valores claro (fallback para var() en components/layout) ─ */
+  --color-card:            white;
+  --color-card-dibujada:   #fffefc;
+  --color-fin-juego:       rgba(255, 255, 255, 0.95);
+  --color-borde-dibujado:  #444;
+  --color-texto-card:      #444;
+  --color-mini-celda:      #cdc1b4;
+  --color-score-li:        #f8f8f8;
+  --color-score-li-alt:    #f1f1f1;
+  --color-score-texto:     #444;
 }
 
 /* ── Reset ─────────────────────────────────────────────────── */

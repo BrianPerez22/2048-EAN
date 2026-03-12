@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="styles/animations.css">
   <link rel="stylesheet" href="styles/tile-colors.css">
   <link rel="stylesheet" href="styles/responsive.css">
+  <link rel="stylesheet" href="styles/dark-mode.css">
 </head>
 <body>
   <div class="contenedor-juego">
@@ -96,5 +97,33 @@
   <!-- fin .contenedor-juego -->
 
   <script src="js/juego.js"></script>
+
+  <!-- Botón modo oscuro + lógica -->
+  <button id="btn-dark-mode" title="Alternar modo oscuro">🌙</button>
+
+  <script>
+    (function () {
+      const btn  = document.getElementById('btn-dark-mode');
+      const CLAVE = '2048_ean_dark';
+
+      // Aplicar preferencia guardada (o del sistema si no hay guardada)
+      const guardado = localStorage.getItem(CLAVE);
+      const prefiereDark = guardado !== null
+        ? guardado === 'true'
+        : window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+      function aplicar(dark) {
+        document.body.classList.toggle('dark', dark);
+        btn.textContent = dark ? '☀️' : '🌙';
+        localStorage.setItem(CLAVE, String(dark));
+      }
+
+      aplicar(prefiereDark);
+
+      btn.addEventListener('click', () => {
+        aplicar(!document.body.classList.contains('dark'));
+      });
+    })();
+  </script>
 </body>
 </html>

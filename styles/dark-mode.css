@@ -1,0 +1,86 @@
+/* ============================================================
+   dark-mode.css
+   Modo oscuro del proyecto 2048 EAN.
+
+   ESTRATEGIA:
+     Sobreescribe las variables CSS de :root en body.dark.
+     Como los demás CSS ya usan var(--...) en todos sus valores,
+     el tema cambia automáticamente sin necesidad de selectores
+     específicos por componente.
+
+   CARGAR SIEMPRE AL FINAL de todos los demás CSS.
+   ACTIVAR: document.body.classList.toggle('dark')
+   ============================================================ */
+
+body.dark {
+  /* ── Variables de tema ─────────────────────────────────────── */
+  --color-primario:        #4ade80;
+  --color-secundario:      #2bbbad;
+  --color-fondo-btn:       #4a4039;
+  --color-fondo-btn-hover: #5a504a;
+  --color-tablero:         #3a3530;
+  --color-texto:           #d4c8be;
+  --color-texto-oscuro:    #e8ddd5;
+  --color-celda:           rgba(60, 50, 45, 0.6);
+  --sombra-card:           0 15px 35px rgba(0, 0, 0, 0.4);
+  --grad-body:             linear-gradient(135deg, #1a4a2a 0%, #0d3a3a 50%, #1a2a4a 100%);
+
+  /* ── Variables de cards/fondos blancos ─────────────────────── */
+  --color-card:            #1e1a17;
+  --color-card-dibujada:   #18120e;
+  --color-fin-juego:       rgba(20, 17, 14, 0.96);
+  --color-borde-dibujado:  #5a4a40;
+
+  /* ── Variables de texto sobre fondos claros ────────────────── */
+  --color-texto-card:      #c8b8ae;
+
+  /* ── Variables de mini-score ───────────────────────────────── */
+  --color-score-li:        #2a2520;
+  --color-score-li-alt:    #242018;
+  --color-score-texto:     #c8b8ae;
+
+  /* ── Variables de mini tablero (tutorial) ──────────────────── */
+  --color-mini-celda:      #4a4035;
+
+  /* ── Body background ───────────────────────────────────────── */
+  background: var(--grad-body);
+}
+
+/* ── Título: gradiente en .ean no se puede hacer solo con vars ─ */
+body.dark .titulo .ean {
+  background: linear-gradient(135deg, #4ade80 0%, #2bbbad 50%, #60a5fa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Botón flotante de modo oscuro ──────────────────────────── */
+#btn-dark-mode {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 9998;
+  background: #8f7a66;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease, transform 0.2s ease;
+  line-height: 1;
+}
+
+#btn-dark-mode:hover {
+  transform: translateY(-2px);
+  background: #9f857a;
+}
+
+body.dark #btn-dark-mode {
+  background: #4a4039;
+}
+
+body.dark #btn-dark-mode:hover {
+  background: #5a504a;
+}

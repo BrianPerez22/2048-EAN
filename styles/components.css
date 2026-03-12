@@ -103,7 +103,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--color-fin-juego, rgba(255, 255, 255, 0.95));
   border-radius: 15px;
   display: none;
   align-items: center;
@@ -136,7 +136,7 @@
 
 /* ── Mini Scoreboard ────────────────────────────────────────── */
 .mini-score {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--color-card, rgba(255, 255, 255, 0.95));
   border-radius: 15px;
   padding: 20px;
   margin-top: 25px;
@@ -164,16 +164,16 @@
 #lista-scores li {
   padding: 6px 10px;
   margin-bottom: 4px;
-  background: #f8f8f8;
+  background: var(--color-score-li, #f8f8f8);
   border-radius: 6px;
   font-size: 0.9rem;
   display: flex;
   justify-content: space-between;
-  color: #444;
+  color: var(--color-score-texto, #444);
 }
 
 #lista-scores li:nth-child(odd) {
-  background: #f1f1f1;
+  background: var(--color-score-li-alt, #f1f1f1);
 }
 
 #lista-scores.mostrando-3 li:nth-child(n+4) {
@@ -216,7 +216,7 @@
 }
 
 .modal-victoria {
-  background: #ffffff;
+  background: var(--color-card, #ffffff);
   border-radius: 12px;
   padding: 24px;
   text-align: center;
@@ -279,13 +279,13 @@
 .texto-instrucciones {
   flex: 1;
   font-size: 1rem;
-  color: #444;
+  color: var(--color-texto-card, #444);
   line-height: 1.4;
   text-align: left;
   padding: 15px;
-  border: 2px dashed #444;
+  border: 2px dashed var(--color-borde-dibujado, #444);
   border-radius: var(--radio-base);
-  background: #fffefc;
+  background: var(--color-card-dibujada, #fffefc);
   font-family: "Comic Sans MS", "Architects Daughter", cursive;
   transition: var(--transicion-base);
 }

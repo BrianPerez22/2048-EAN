@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="styles/tile-colors.css">
   <link rel="stylesheet" href="styles/menu.css">
   <link rel="stylesheet" href="styles/responsive.css">
+  <link rel="stylesheet" href="styles/dark-mode.css">
 </head>
 <body>
   <div class="contenedor-menu">
@@ -84,5 +85,32 @@
 
   <!-- Acordeón manejado por js/menu.js -->
   <script src="js/menu.js"></script>
+
+  <!-- Botón modo oscuro + lógica -->
+  <button id="btn-dark-mode" title="Alternar modo oscuro">🌙</button>
+
+  <script>
+    (function () {
+      const btn   = document.getElementById('btn-dark-mode');
+      const CLAVE = '2048_ean_dark';
+
+      const guardado = localStorage.getItem(CLAVE);
+      const prefiereDark = guardado !== null
+        ? guardado === 'true'
+        : window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+      function aplicar(dark) {
+        document.body.classList.toggle('dark', dark);
+        btn.textContent = dark ? '☀️' : '🌙';
+        localStorage.setItem(CLAVE, String(dark));
+      }
+
+      aplicar(prefiereDark);
+
+      btn.addEventListener('click', () => {
+        aplicar(!document.body.classList.contains('dark'));
+      });
+    })();
+  </script>
 </body>
 </html>
