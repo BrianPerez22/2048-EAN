@@ -1,0 +1,596 @@
+# ================================================================
+#  ESTRUCTURA.TXT — 2048-EAN
+#  Descripción completa del proyecto para lectura humana y por IA.
+#  Generado con base en el código real de todos los archivos.
+# ================================================================
+
+## RESUMEN DEL PROYECTO
+Juego 2048 personalizado para la Universidad EAN.
+Funciona completamente en el navegador (frontend puro).
+Guarda y consulta puntajes globales mediante una API serverless en AWS.
+Diseñado responsive: funciona en móvil (swipe táctil) y PC (teclado + mouse).
+Tiene un personaje llamado "Meli" (SVG) que actúa como guía visual.
+
+---
+
+## ARQUITECTURA GENERAL
+
+  [Usuario / Navegador]
+        │
+        ▼
+  [AWS Amplify]  ← sirve los archivos estáticos (HTML/CSS/JS)
+        │  entry point: index.html
+        ▼
+  [API Gateway]  ← HTTP API
+        │  POST /scores             → guardar puntaje
+        │  GET  /scores/top?limit=N → leer Top N puntajes
+        ▼
+  [AWS Lambda]   ← Node.js 22.x, dos funciones
+        │  postScore     → recibe {nombre, puntaje}, genera id, inserta en DynamoDB
+        │  getTopScores  → escanea DynamoDB, ordena desc, devuelve top N
+        ▼
+  [DynamoDB]     ← tabla "Scores2048"
+        │  Partition key: id (string / timestamp)
+        │  Atributos: nombre (string), puntaje (number), fecha (string ISO)
+
+---
+
+## ESTRUCTURA DE CARPETAS
+
+2048-EAN/
+│
+├── index.html
+├── 2048.html
+├── tutorial.html
+├── colores.html
+├── readme.md
+│
+├── img/
+│   ├── favicon.svg
+│   ├── Meli-01.svg
+│   ├── Meli-02.svg
+│   ├── Meli-03.svg
+│   └── Meli-04.svg
+│
+├── styles/
+│   ├── estilos.css        ← ORIGINAL INTACTO (no borrar)
+│   ├── base.css
+│   ├── layout.css
+│   ├── components.css
+│   ├── animations.css
+│   ├── tile-colors.css
+│   ├── menu.css
+│   ├── tutorial.css
+│   └── responsive.css
+│
+├── js/
+│   ├── juego.js
+│   ├── tutorial.js
+│   ├── menu.js
+│   └── ui.js
+│
+├── backend/
+│   ├── aws-config.md
+│   └── lambda/
+│       ├── postScore/index.mjs
+│       └── getTopScores/index.mjs
+│
+└── docs/
+    ├── estructura.txt         ← este archivo
+    └── colores-referencia.html
+
+---
+
+## DESCRIPCIÓN DETALLADA DE CADA ARCHIVO
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## HTML
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+### index.html
+  Página de entrada / menú principal.
+  Estructura:
+    - Título "2048 EAN" con gradiente en la palabra "EAN"
+    - Párrafo introductorio sobre el juego
+    - Acordeón desplegable: "¿Por qué 2048 es un Juego Matemático?"
+      (explicación de potencias de 2, sistema binario, matrices)
+    - Imagen de Meli-02.svg (clickeable → va a 2048.html)
+    - Dos botones: "🎮 Jugar" → 2048.html | "📖 Tutorial" → tutorial.html
+  CSS cargado: base, layout, components, animations, tile-colors, menu, responsive
+  JS cargado: js/menu.js (maneja el acordeón)
+  NO tiene lógica de AWS.
+
+### 2048.html
+  Página principal del juego.
+  Estructura:
+    - Encabezado con título
+    - Barra de info: puntajes (PUNTAJE / MEJOR / FICHAS) + botones (DESHACER / REINICIAR / TUTORIAL)
+    - Slider "Pasos a deshacer" (1–12, default 6)
+    - Tablero 4x4: 16 celdas de fondo + fichas generadas dinámicamente por JS
+    - Overlay de fin de juego (creado por JS dentro del tablero)
+    - Columna derecha: texto instrucciones + Meli-01.svg (toggle de mensajes) + mini-score
+    - Overlay global #overlay con modal de victoria (creado por JS en configurarUI)
+  CSS cargado: base, layout, components, animations, tile-colors, responsive
+  JS cargado: js/juego.js
+  ⚠️ NO cargar tutorial.css ni menu.css aquí.
+
+### tutorial.html
+  Tutorial interactivo con carrusel de 13 slides.
+  Tiene DOS versiones en el mismo HTML:
+    - Versión MÓVIL (< 1024px): carrusel #carrusel-movil con swipe táctil,
+      botones prev/next, indicadores, Meli-04.svg, botones de navegación
+    - Versión DESKTOP (≥ 1024px, ratio 16/9): layout 3 columnas como el juego,
+      tutorial.js clona los slides de móvil a #carrusel-desk
+  Slides (13 en total):
+    1. Introducción al juego
+    2-10. Estados de ejemplo del tablero (mini-tableros renderizados por JS)
+    11. Slider de deshacer (demo interactivo)
+    12. Controles PC parte 1 (flechas, WASD, deshacer)
+    13. Controles PC parte 2 (espacio, Ctrl+R, sonido)
+  CSS cargado: base, layout, components, animations, tile-colors, tutorial, responsive
+  JS cargado: js/tutorial.js
+
+### colores.html
+  Herramienta interna de referencia visual.
+  Muestra la paleta completa de fichas (2 hasta 65536) con sus colores hex.
+  CSS completamente INLINE (sin dependencias externas).
+  No es una página del juego → mover a docs/colores-referencia.html.
+
+---
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## CSS (styles/)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+### estilos.css  ⚠️ NO BORRAR NI RENOMBRAR
+  Archivo original completo (~700 líneas).
+  Referenciado directamente por los HTML antes del split.
+  Mantener intacto para rollback de emergencia.
+
+### base.css
+  Contiene:
+    - :root con variables CSS (colores, radios, sombras, gradiente del body)
+    - Reset universal (* { margin:0; padding:0; box-sizing:border-box })
+    - Estilos del body (gradiente, flex, centrado)
+  Variables clave:
+    --color-primario: #3bac53 (verde EAN)
+    --color-secundario: #2bbbad (teal, color del 2048)
+    --color-fondo-btn: #8f7a66
+    --grad-body: linear-gradient(135deg, #4ade80, #22d3ee, #3b82f6)
+
+### layout.css
+  Contiene:
+    - .contenedor-juego (card blanca con sombra)
+    - .encabezado, .titulo, .titulo .ean (degradado en texto)
+    - .barra-info, .contenedor-puntajes, .grupo-puntajes, .item-puntaje
+    - .etiqueta-puntaje, .valor-puntaje
+    - .contenedor-botones
+    - .controles-extra, .control-deshacer
+    - #rango-deshacer (slider: track, thumb para webkit y moz)
+    - #valor-deshacer
+    - .seccion-educativa (bloque educativo con resaltado)
+
+### components.css
+  Contiene:
+    - .btn-juego (botón base con hover y disabled)
+    - .instrucciones
+    - .tablero-juego (grid 4x4, touch-action: none)
+    - .celda (fondo semitransparente)
+    - .ficha (position:absolute, transition transform)
+    - .ficha-inner (contenido visual con animación de pop)
+    - .fin-juego (overlay dentro del tablero, oculto por defecto)
+    - .texto-fin, .puntaje-fin, .botones-fin
+    - .mini-score, #lista-scores, #btn-ver-mas
+    - #overlay, .modal-victoria (overlay global de victoria)
+    - .meli-contenedor, .meli-img
+    - .instrucciones-meli, .texto-instrucciones (estilo "dibujado" con Comic Sans)
+    - .meli-boton, .meli-boton.brillante
+    - .tablero-juego.alerta14 / .alerta15 / .alerta16 (resplandores)
+    - .flecha, .flecha.arriba (SVG del acordeón)
+
+### animations.css
+  Contiene todos los @keyframes:
+    - aparecer: scale 0→1, opacity 0→1 (fichas nuevas + modal)
+    - salto: scale 1→1.1→1 (legacy, fichas fusionadas)
+    - fusion-pop: scale 1→1.25→0.95→1 (animación principal de fusión)
+    - parpadeoNaranja: box-shadow pulsante (tablero con 16 fichas)
+    - rebote: scale 0.9→1.1→1 (click en Meli)
+    - fade: opacity 0→1 (carrusel del tutorial)
+  Clases: .ficha.nueva, .ficha.fusion / .fusion
+  Media query: prefers-reduced-motion desactiva todo.
+
+### tile-colors.css
+  Paleta completa de colores para todas las fichas.
+  Aplica a tres selectores por valor:
+    .ficha.vN        → ficha del juego (contenedor)
+    .ficha-inner.vN  → ficha del juego (contenido interno)
+    .mini-celda.vN   → mini-tablero del tutorial
+  Valores: 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024,
+           2048, 4096, 8192, 16384, 32768, 65536
+  Progresión de colores:
+    2-4:    verde muy claro  (#e6f7e9 / #c8f7d4)
+    8-64:   verde material   (#81c784 → #1b5e20)
+    128-512: teal            (#2AA589 → #005C4D)
+    1024:   azul oscuro      (#003B4C)
+    2048:   teal brillante   (#2bbbad) con glow
+    4096+:  morado → fucsia → negro con glow creciente
+
+### menu.css
+  Cargado SOLO por index.html.
+  Contiene:
+    - .contenedor-menu (card del menú, max-width 600px)
+    - .acordeon, .acordeon-btn, .acordeon-contenido
+    - .acordeon-contenido.expandido (max-height 1000px)
+    - .botones-menu (flex, gap 15px, centrado)
+    - .descripcion, .descripcion.expandida (variante alternativa)
+    - #btn-expandir
+
+### tutorial.css
+  Cargado SOLO por tutorial.html.
+  Contiene:
+    - .carrusel, .carrusel-item, .carrusel-item.activo
+    - .carrusel-controles, .carrusel-indicadores, .indicador
+    - .mini-tablero (grid 4x4, 252x252px en móvil)
+    - .mini-celda (celda base, sin color — colores en tile-colors.css)
+    - .cajon-slider (borde dashed, fondo gris claro)
+    - .controles-grid, .control-item, .teclas, .tecla, .tecla.combo
+    - Layout desktop .tutorial-desktop (3 columnas idénticas al juego):
+        columna 1: .controles-tutorial (nav + controles carrusel + indicadores)
+        columna 2: .carrusel-centro (carrusel ampliado, mini-tablero 320px)
+        columna 3: .meli-tutorial (.info-tutorial arriba, .instrucciones-tutorial abajo)
+    - Reordenamiento con order: .info-tutorial arriba, .instrucciones-tutorial abajo
+    - Colores .tutorial-desktop .mini-celda.vN (redundante con tile-colors pero
+      necesario por especificidad del selector .tutorial-desktop)
+
+### responsive.css
+  Contiene TODOS los @media queries del proyecto unificados:
+    @media (max-width: 480px)
+      → móvil: reduce tamaños de fuente, botones, tablero (max-width 300px)
+    @media (min-aspect-ratio: 16/9) and (min-width: 1024px)
+      → desktop wide: layout 3 columnas para el juego
+        grid-template-columns: 300px 1fr 300px
+        columna 1: barra-info (puntajes + botones en vertical)
+        columna 2: tablero-juego (max-width 450px)
+        columna 3: instrucciones-meli + mini-score
+    @media (prefers-reduced-motion: reduce)
+      → desactiva transition y animation en .ficha
+
+---
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## JAVASCRIPT (js/)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+### juego.js  ⚠️ CONTIENE URL DE AWS — NO CAMBIAR SIN COORDINAR
+  Archivo más grande e importante del proyecto.
+  Estructura interna:
+
+  CONSTANTES GLOBALES:
+    TAM = 4                        (tamaño del tablero)
+    CLAVE_ESTADO = '2048_ean_estado'
+    CLAVE_MEJOR  = '2048_ean_mejor'
+    CLAVE_HISTORIAL = '2048_scores' (fallback local, no usado activamente)
+
+  FILTRO DE NOMBRES (líneas ~12-64):
+    PALABRAS_PROHIBIDAS → array con palabras bloqueadas (español, colombia, inglés)
+    limpiarTexto(texto) → normaliza acentos, leet speak, símbolos especiales
+    esNombreInapropiado(nombre) → retorna true si contiene palabras bloqueadas
+    solicitarNombreValido() → prompt con hasta 3 intentos, fallback "JugadorN"
+
+  AWS API (líneas ~68-85):
+    API_BASE = "https://9g0v6cib0g.execute-api.us-east-1.amazonaws.com"
+    apiGuardarPuntajeAWS({nombre, puntaje}) → POST /scores
+    apiObtenerTopAWS(limit=5) → GET /scores/top?limit=N
+
+  UTILIDADES (líneas ~88-93):
+    copiarMatriz(m)  → deep copy de la matriz 4x4
+    matrizVacia()    → crea matriz 4x4 llena de 0
+    limitar(v,min,max) → clamp numérico
+    generarId()      → string único basado en timestamp
+
+  CLASE Juego2048:
+
+    constructor():
+      Estado: tablero (4x4), puntaje, mejor, ganado, terminado,
+              perdidoTemporal, historial[], maxDeshacer=6,
+              sonidoActivo=true, continuarDespuesVictoria=false
+      Referencias DOM: domTablero, domPuntaje, domMejor, domFichas,
+                       domFin, domPuntajeFinal, botonDeshacer,
+                       listaScores, btnVerMas
+      Llama: iniciar()
+
+    iniciar():
+      1. iniciarAudio() → crea AudioContext
+      2. configurarUI() → crea celdas DOM + overlay fin + slider
+      3. configurarEventos() → teclado + touch + botones
+      4. cargar() || nuevo() → restaura estado o crea partida nueva
+      5. actualizarVista() → renderiza tablero
+      6. cargarHistorialMiniScore() → carga Top 5 desde AWS
+
+    configurarEventos():
+      Teclado:
+        Ctrl+Z / R / Delete → deshacer()
+        Ctrl+R → reiniciar()
+        Flechas / WASD → mover(dir)
+        Espacio → confirm + reiniciar()
+        Escape → cerrar overlay si aplica
+        M → toggleSonido()
+      Touch:
+        touchstart / touchend en domTablero
+        umbral dinámico: max(20, min(innerWidth*0.04, 40))
+        detecta swipe en 4 direcciones → mover(dir)
+      Botones:
+        #btn-deshacer → deshacer()
+        #btn-reiniciar → reiniciar()
+        #btn-continuar → deshacer() (si perdidoTemporal) | continuar (si ganado)
+        #btn-reiniciar2 → finalizar partida | nuevo juego
+        #btn-ver-mas → toggle mostrandoTodo + renderMiniScore()
+      Ventana:
+        beforeunload → guardar()
+
+    configurarUI():
+      Crea 16 .celda dentro de domTablero
+      Crea overlay #fin-juego con modal-victoria (innerHTML)
+      Re-asigna domFin y domPuntajeFinal
+      Configura slider #rango-deshacer con listener input
+
+    guardarEstado():
+      Push {tablero, puntaje} al historial[]
+      Limita historial a maxDeshacer entradas (shift si excede)
+
+    deshacer():
+      Pop del historial
+      Restaura tablero y puntaje previos
+      Resetea ganado, terminado, perdidoTemporal a false
+      Oculta overlay, actualiza vista y botones, guarda, suena (200Hz)
+
+    nuevo():
+      Resetea todo el estado
+      Llama agregarFicha() dos veces para comenzar
+
+    reiniciar():
+      Si puntaje > 0: confirm() + agregarAlHistorial()
+      Llama nuevo(), actualizarVista(), ocultarFin(), guardar()
+
+    mover(dir):
+      Si perdidoTemporal: return (bloquea movimientos)
+      guardarEstado()
+      Procesa cada fila/columna según dirección (izq/der/arr/aba):
+        1. Extrae línea según dirección
+        2. Filtra ceros → compacta
+        3. Fusiona adyacentes iguales (× 2, suma a puntaje)
+        4. Rellena con ceros hasta TAM
+        5. Escribe de vuelta al tablero
+      Si no movió: pop historial, return
+      agregarFicha() → agrega ficha 2 (90%) o 4 (10%)
+      Actualiza mejor en localStorage si corresponde
+      suena (300Hz)
+      actualizarVista(), actualizarBotones(), guardar(), verificarEstado()
+      setTimeout 30ms: busca .ficha-inner.vN y agrega clase .fusion
+
+    verificarEstado():
+      Si hay 2048 y no continuarDespuesVictoria y no ganado:
+        → ganado = true, setTimeout 300ms → mostrarFin()
+      Si esFin():
+        → perdidoTemporal = true, setTimeout 300ms → mostrarFin()
+
+    esFin():
+      Retorna true si: ninguna celda vacía Y ningún par adyacente igual
+
+    mostrarFin():
+      Adapta texto del overlay según estado:
+        ganado → "¡Llegaste a 2048!" + botones Continuar/Reiniciar
+        perdidoTemporal → "¡Sin movimientos!" + botones Deshacer/Finalizar
+        terminado → "¡Fin del juego!" + botón Nueva partida
+      Agrega clase .mostrar a domFin
+
+    ocultarFin():
+      Quita clase .mostrar de domFin
+
+    actualizarVista():
+      Calcula lado = (tamTab - gap*(TAM+1)) / TAM
+      Mapea fichas DOM actuales por dataset.pos ("r-c")
+      Para cada celda del tablero lógico:
+        v===0 → elimina DOM si existe
+        v!==0 → busca ficha en posición exacta, o reutiliza una con mismo valor,
+                o crea nueva con crearFicha()
+        Posiciona con: ficha.style.transform = `translate(${x}px, ${y}px)`
+      Elimina fichas DOM sobrantes (merges)
+      Actualiza puntaje, mejor, fichas en DOM
+      Aplica clase alerta14/15/16 según totalFichas
+
+    crearFicha(valor, fila, col):
+      Crea div.ficha con div.ficha-inner.vN dentro
+      Posiciona con transform
+      Animación de entrada: inner scale 0.8→1 + opacity 0→1
+      Agrega al domTablero
+
+    agregarAlHistorial(puntos):
+      Llama solicitarNombreValido() → prompt con filtro
+      apiGuardarPuntajeAWS({nombre, puntaje})
+        .then → cargarHistorialMiniScore()
+        .catch → console.error
+
+    cargarHistorialMiniScore():
+      apiObtenerTopAWS(5)
+        .then → datosMiniScore = [{nombre, puntaje}...], renderMiniScore()
+        .catch → datosMiniScore = [], renderMiniScore()
+
+    renderMiniScore():
+      Limpia #lista-scores
+      Renderiza items según mostrandoTodo (5 o 10)
+      Muestra/oculta #btn-ver-mas si hay más de 5
+
+    sonido(freq, dur):
+      Crea OscillatorNode + GainNode en AudioContext
+      Tono sinusoidal con envelope exponencial
+
+    guardar():
+      JSON.stringify del estado completo → localStorage CLAVE_ESTADO
+
+    cargar():
+      JSON.parse de localStorage CLAVE_ESTADO
+      Restaura tablero, puntaje, mejor, historial, perdidoTemporal,
+      maxDeshacer, sonidoActivo
+
+  INICIALIZACIÓN (fin del archivo):
+    DOMContentLoaded → juego = new Juego2048()
+
+  MELI SWITCH (fuera de la clase):
+    #meliSwitch click → toggle .brillante + cambia #textoInstrucciones
+    Mensaje 1: "Junta las fichas..." (instrucción básica)
+    Mensaje 2: "Mueve las fichas con WASD..." (instrucción de controles)
+
+### tutorial.js
+  Maneja el tutorial interactivo.
+  Detecta móvil (< 1024px) vs desktop al cargar.
+  En DESKTOP: clona los slides de #carrusel-movil a #carrusel-desk.
+  En MÓVIL: oculta elementos de desktop (.controles-tutorial, .carrusel-centro, .meli-tutorial).
+  Controles: botones prev/next, teclado (←/→), swipe táctil (umbral 40px).
+  Crea indicadores (bolitas) dinámicamente en el contenedor correspondiente.
+  Recarga la página con location.reload() si cambia el tamaño entre mobile/desktop.
+  Renderiza 9 mini-tableros de ejemplo con estados predefinidos:
+    Estado 1: dos fichas 2 en fila inferior
+    Estado 2: fichas en posición central
+    Estado 3: corner strategy básica
+    Estado 4-7: construcción progresiva hasta 1024
+    Estado 8: tablero casi lleno con 2048
+    Estado 9: tablero completo hasta 65536
+  Slider de deshacer: solo demo, actualiza #valor-deshacer en tiempo real.
+
+### menu.js
+  Script del acordeón del menú principal (index.html).
+  Antes era un <script> inline de ~10 líneas en index.html.
+  Toggle de clase .expandido en #contenido-info.
+  Toggle de clase .arriba en #flecha-info (rota la flecha SVG).
+  Envuelto en DOMContentLoaded con verificación de elementos.
+
+### ui.js
+  Helpers compartidos de UI reutilizables.
+  No se carga en ningún HTML por defecto → importar según necesidad.
+  Funciones disponibles:
+    formatearPuntaje(n)         → "12.345" con separador de miles (es-CO)
+    formatearFecha(isoString)   → "1 jun 2025" en español
+    truncarTexto(texto, maxLen) → "Texto…" si excede el límite
+    mostrarToast(msg, tipo, ms) → notificación flotante auto-eliminable
+                                  tipos: 'info' | 'exito' | 'error'
+    animarUnaVez(el, clase)     → agrega clase CSS y la quita al terminar animación
+    pulsarElemento(el)          → pulso visual reutilizando fusion-pop
+    porId(id)                   → getElementById con null-safe
+    alClick(id, cb)             → addEventListener click con null-safe
+    toggleVisible(elOId, bool)  → toggle clase .mostrar
+
+---
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## BACKEND (backend/)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+### backend/aws-config.md
+  Documentación de configuración de AWS:
+    - DynamoDB: tabla Scores2048, partition key id, capacidad on-demand
+    - Lambda postScore: runtime Node.js 22.x, handler index.handler,
+      env TABLE_NAME=Scores2048, recibe {nombre, puntaje}, genera id timestamp
+    - Lambda getTopScores: misma config, escanea y ordena por puntaje desc
+    - API Gateway: HTTP API, stage $default, CORS *, rutas POST/GET
+
+### backend/lambda/postScore/index.mjs
+  Lambda para guardar puntaje.
+  Endpoint: POST /scores
+  Body esperado: { nombre: string, puntaje: number }
+  Genera: id = Date.now().toString()
+  Inserta en DynamoDB: { id, nombre, puntaje, fecha: new Date().toISOString() }
+
+### backend/lambda/getTopScores/index.mjs
+  Lambda para consultar ranking.
+  Endpoint: GET /scores/top?limit=N (default 5)
+  Escanea tabla Scores2048
+  Ordena resultados por puntaje descendente
+  Retorna los primeros N registros
+
+---
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## DEPENDENCIAS ENTRE ARCHIVOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  index.html
+    ├── styles/base.css
+    ├── styles/layout.css
+    ├── styles/components.css
+    ├── styles/animations.css
+    ├── styles/tile-colors.css
+    ├── styles/menu.css
+    ├── styles/responsive.css
+    ├── js/menu.js
+    ├── img/favicon.svg
+    └── img/Meli-02.svg
+
+  2048.html
+    ├── styles/base.css
+    ├── styles/layout.css
+    ├── styles/components.css
+    ├── styles/animations.css
+    ├── styles/tile-colors.css
+    ├── styles/responsive.css
+    ├── js/juego.js  ←─ contiene API_BASE de AWS
+    ├── img/favicon.svg
+    └── img/Meli-01.svg
+
+  tutorial.html
+    ├── styles/base.css
+    ├── styles/layout.css
+    ├── styles/components.css
+    ├── styles/animations.css
+    ├── styles/tile-colors.css
+    ├── styles/tutorial.css
+    ├── styles/responsive.css
+    ├── js/tutorial.js
+    ├── img/favicon.svg
+    └── img/Meli-04.svg
+
+  colores.html
+    └── (CSS inline, sin dependencias externas)
+
+---
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## LO QUE NO SE DEBE CAMBIAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ⚠️  styles/estilos.css      → rollback de emergencia
+  ⚠️  js/juego.js             → referenciado en 2048.html y en readme.md
+  ⚠️  js/tutorial.js          → referenciado en tutorial.html
+  ⚠️  img/ (nombres SVG)      → referenciados por nombre exacto en HTML y JS
+  ⚠️  index.html              → entry point de AWS Amplify
+  ⚠️  API_BASE en juego.js    → apunta a API Gateway real en us-east-1
+  ⚠️  Tabla DynamoDB: Scores2048 → nombre hardcoded en Lambda
+
+---
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## NOTAS PARA FUSIÓN CON OTRO PROYECTO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  1. Los 3 HTML están en raíz → mover a subcarpeta /juego/ si el otro proyecto
+     necesita la raíz, actualizando los href de navegación entre páginas.
+
+  2. El CSS usa clases muy específicas del juego (.contenedor-juego, .tablero-juego,
+     .ficha, etc.) → bajo riesgo de colisión con frameworks externos.
+     Si el otro proyecto usa Bootstrap u otro framework, cargar estos CSS DESPUÉS.
+
+  3. El único estado persistente en cliente es localStorage con prefijo '2048_ean_'
+     → sin riesgo de colisión con otras claves del localStorage.
+
+  4. La API AWS está en una sola constante (API_BASE en juego.js) → fácil de
+     apuntar a otro endpoint o envolver en un archivo de config.
+
+  5. Las imágenes Meli son SVG → escalables sin pérdida. Mover a /juego/img/ si
+     se reorganiza el proyecto.
+
+  6. js/ui.js es el punto de extensión → agregar helpers compartidos ahí.
+
+  7. colores.html es completamente independiente → se puede borrar sin efecto.
+
+  8. La clase .tutorial-desktop en <body> es el toggle de layout → cuidar que
+     no colisione con clases globales del otro proyecto.

@@ -2,21 +2,30 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>2048 EAN Menu</title>
-    <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
-  <link rel="stylesheet" href="styles/estilos.css">
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+
+  <!-- CSS modular -->
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/layout.css">
+  <link rel="stylesheet" href="styles/components.css">
+  <link rel="stylesheet" href="styles/animations.css">
+  <link rel="stylesheet" href="styles/tile-colors.css">
+  <link rel="stylesheet" href="styles/menu.css">
+  <link rel="stylesheet" href="styles/responsive.css">
 </head>
 <body>
   <div class="contenedor-menu">
     <h1 class="titulo">2048 <span class="ean">EAN</span></h1>
 
-    <!-- Texto introductorio original -->
+    <!-- Texto introductorio -->
     <p>
-      2048 es un juego matemático de lógica y estrategia donde debes combinar fichas para llegar al número más alto posible.
+      2048 es un juego matemático de lógica y estrategia donde debes combinar
+      fichas para llegar al número más alto posible.
     </p>
 
-    <!-- Botón desplegable -->
+    <!-- Acordeón informativo -->
     <div class="acordeon">
       <button class="acordeon-btn" id="btn-info">
         <span id="texto-info">🧮 ¿Por qué 2048 es un Juego Matemático?</span>
@@ -25,48 +34,46 @@
         </svg>
       </button>
       <div id="contenido-info" class="acordeon-contenido">
-         <h3>🎮 2048: Matemáticas que se juegan</h3>
-<p>
-  A primera vista, <em>2048</em> parece un simple pasatiempo de deslizar fichas. 
-  Pero en el fondo es pura <strong>matemática disfrazada de juego</strong>.
-</p>
-<p>
-  Cada ficha representa una <strong>potencia de 2</strong>: 2, 4, 8, 16, 32… 
-  Esta secuencia ha sido estudiada desde la antigüedad y hoy es la base del 
-  <strong>sistema binario</strong>, el lenguaje que usan las computadoras para funcionar. 
-  Sin estas potencias, no existirían ni el software ni los videojuegos.
-</p>
-<p>
-  Lo curioso es que <em>2048</em> también es un pequeño laboratorio de 
-  <strong>álgebra lineal</strong>:
-</p>
-<ul>
-  <li>El tablero puede imaginarse como una <strong>matriz 4×4</strong>.</li>
-  <li>Cada movimiento actúa como una <strong>transformación lineal</strong>, que desplaza y combina fichas.</li>
-  <li>Al fusionar valores, en realidad estás modificando <strong>vectores en un espacio matricial</strong>.</li>
-</ul>
-<p>
-  Incluso hay una propiedad llamativa: todas las fichas del juego serán siempre 
-  potencias de 2. Esto se debe a que el juego empieza en 2 o 4, y la única manera 
-  de crecer es sumando dos valores iguales.
-</p>
-<p>
-  <strong>Conclusión:</strong> <em>2048</em> no solo es un pasatiempo entretenido, 
-  también es un ejemplo accesible de cómo la <strong>matemática abstracta</strong> 
-  se esconde en nuestra vida diaria, en los videojuegos y en la tecnología 
-  que usamos a cada momento.
-</p>
-
+        <h3>🎮 2048: Matemáticas que se juegan</h3>
+        <p>
+          A primera vista, <em>2048</em> parece un simple pasatiempo de deslizar fichas.
+          Pero en el fondo es pura <strong>matemática disfrazada de juego</strong>.
+        </p>
+        <p>
+          Cada ficha representa una <strong>potencia de 2</strong>: 2, 4, 8, 16, 32…
+          Esta secuencia ha sido estudiada desde la antigüedad y hoy es la base del
+          <strong>sistema binario</strong>, el lenguaje que usan las computadoras para funcionar.
+          Sin estas potencias, no existirían ni el software ni los videojuegos.
+        </p>
+        <p>
+          Lo curioso es que <em>2048</em> también es un pequeño laboratorio de
+          <strong>álgebra lineal</strong>:
+        </p>
+        <ul>
+          <li>El tablero puede imaginarse como una <strong>matriz 4×4</strong>.</li>
+          <li>Cada movimiento actúa como una <strong>transformación lineal</strong>, que desplaza y combina fichas.</li>
+          <li>Al fusionar valores, en realidad estás modificando <strong>vectores en un espacio matricial</strong>.</li>
+        </ul>
+        <p>
+          Incluso hay una propiedad llamativa: todas las fichas del juego serán siempre
+          potencias de 2. Esto se debe a que el juego empieza en 2 o 4, y la única manera
+          de crecer es sumando dos valores iguales.
+        </p>
+        <p>
+          <strong>Conclusión:</strong> <em>2048</em> no solo es un pasatiempo entretenido,
+          también es un ejemplo accesible de cómo la <strong>matemática abstracta</strong>
+          se esconde en nuestra vida diaria, en los videojuegos y en la tecnología
+          que usamos a cada momento.
+        </p>
       </div>
     </div>
 
-    <!-- Imagen de Meli con acción de Jugar -->
+    <!-- Imagen Meli → link a jugar -->
     <div class="meli-contenedor">
       <a href="2048.html">
         <img src="img/Meli-02.svg" alt="Meli" class="meli-img">
       </a>
     </div>
-
 
     <!-- Botones de navegación -->
     <div class="botones-menu">
@@ -75,18 +82,7 @@
     </div>
   </div>
 
-<script>
-  const btnInfo = document.getElementById("btn-info");
-  const flechaInfo = document.getElementById("flecha-info");
-  const contenidoInfo = document.getElementById("contenido-info");
-  let abierto = false;
-
-  btnInfo.addEventListener("click", () => {
-    abierto = !abierto;
-    contenidoInfo.classList.toggle("expandido", abierto);
-    flechaInfo.classList.toggle("arriba", abierto);
-  });
-</script>
-
+  <!-- Acordeón manejado por js/menu.js -->
+  <script src="js/menu.js"></script>
 </body>
 </html>

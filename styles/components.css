@@ -1,0 +1,336 @@
+/* ============================================================
+   components.css
+   Componentes reutilizables: botones, tablero, fichas,
+   mini-score, modal de victoria, Meli, instrucciones.
+   Cargado por: index.html, 2048.html, tutorial.html
+   ============================================================ */
+
+/* ── Botón base ─────────────────────────────────────────────── */
+.btn-juego {
+  background: var(--color-fondo-btn);
+  color: white;
+  border: none;
+  padding: 15px 20px;
+  border-radius: var(--radio-base);
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: var(--transicion-base);
+  min-width: 80px;
+}
+
+.btn-juego:hover {
+  background: var(--color-fondo-btn-hover);
+  transform: translateY(-2px);
+}
+
+.btn-juego:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  opacity: 0.6;
+}
+
+/* ── Instrucciones de texto ─────────────────────────────────── */
+.instrucciones {
+  margin-top: 30px;
+  color: var(--color-texto);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* ── Tablero 4x4 ────────────────────────────────────────────── */
+.tablero-juego {
+  position: relative;
+  background: var(--color-tablero);
+  border-radius: 15px;
+  padding: 10px;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 10px;
+  touch-action: none;
+  overflow: hidden;
+}
+
+/* ── Celdas de fondo ────────────────────────────────────────── */
+.celda {
+  background: var(--color-celda);
+  border-radius: var(--radio-base);
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Ficha contenedor ───────────────────────────────────────── */
+.ficha {
+  position: absolute;
+  border-radius: var(--radio-base);
+  aspect-ratio: 1;
+  z-index: 1;
+  user-select: none;
+  -webkit-user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.18s ease-in-out;
+  will-change: transform;
+}
+
+/* ── Ficha inner (contenido visual con animación de pop) ────── */
+.ficha-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radio-base);
+  font-weight: bold;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+  transition: transform 0.15s ease-in-out, opacity 0.12s ease;
+}
+
+/* ── Pantalla de fin de juego (dentro del tablero) ──────────── */
+.fin-juego {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 100;
+}
+
+.fin-juego.mostrar {
+  display: flex;
+}
+
+.texto-fin {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--color-texto);
+  margin-bottom: 20px;
+}
+
+.puntaje-fin {
+  font-size: 1.2rem;
+  color: var(--color-fondo-btn);
+  margin-bottom: 20px;
+}
+
+.botones-fin {
+  display: flex;
+  gap: 10px;
+}
+
+/* ── Mini Scoreboard ────────────────────────────────────────── */
+.mini-score {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 20px;
+  margin-top: 25px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.mini-score h3 {
+  color: var(--color-primario);
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+#lista-scores {
+  list-style: none;
+  margin: 0 0 15px 0;
+  padding: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+#lista-scores li {
+  padding: 6px 10px;
+  margin-bottom: 4px;
+  background: #f8f8f8;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  display: flex;
+  justify-content: space-between;
+  color: #444;
+}
+
+#lista-scores li:nth-child(odd) {
+  background: #f1f1f1;
+}
+
+#lista-scores.mostrando-3 li:nth-child(n+4) {
+  display: none;
+}
+
+#btn-ver-mas {
+  background: var(--color-fondo-btn);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: var(--radio-base);
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: var(--transicion-base);
+}
+
+#btn-ver-mas:hover {
+  background: var(--color-fondo-btn-hover);
+  transform: translateY(-2px);
+}
+
+/* ── Overlay + Modal de victoria ────────────────────────────── */
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+#overlay.mostrar {
+  display: flex;
+}
+
+.modal-victoria {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  width: 320px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  animation: aparecer 0.3s ease-out;
+}
+
+.modal-victoria h2 {
+  margin-top: 0;
+  color: var(--color-secundario);
+}
+
+.modal-victoria p {
+  margin: 12px 0;
+  font-weight: bold;
+}
+
+.modal-victoria .botones-fin {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.modal-victoria .btn-juego {
+  flex: 1;
+  margin: 0 5px;
+}
+
+/* ── Meli contenedor e imagen ───────────────────────────────── */
+.meli-contenedor {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.meli-img {
+  display: block;
+  max-width: 200px;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.25));
+}
+
+.meli-img:active {
+  animation: rebote 0.3s ease;
+}
+
+/* ── Instrucciones Meli (zona derecha del juego) ────────────── */
+.instrucciones-meli {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.texto-instrucciones {
+  flex: 1;
+  font-size: 1rem;
+  color: #444;
+  line-height: 1.4;
+  text-align: left;
+  padding: 15px;
+  border: 2px dashed #444;
+  border-radius: var(--radio-base);
+  background: #fffefc;
+  font-family: "Comic Sans MS", "Architects Daughter", cursive;
+  transition: var(--transicion-base);
+}
+
+/* ── Botón Meli (toggle de mensajes) ────────────────────────── */
+.meli-boton {
+  max-width: 120px;
+  height: auto;
+  cursor: pointer;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.25));
+  transition: transform 0.2s ease, filter 0.3s ease;
+}
+
+.meli-boton:active {
+  animation: rebote 0.3s ease;
+}
+
+.meli-boton.brillante {
+  filter: drop-shadow(0 0 15px #ffeb3b) brightness(1.3);
+}
+
+/* ── Alertas visuales del tablero (14 / 15 / 16 fichas) ─────── */
+.tablero-juego.alerta14 {
+  box-shadow: 0 0 12px 4px rgba(255, 215, 0, 0.2) inset;
+  transition: box-shadow 0.8s ease;
+}
+
+.tablero-juego.alerta15 {
+  box-shadow: 0 0 20px 8px rgba(255, 215, 0, 0.5) inset;
+  transition: box-shadow 0.8s ease;
+}
+
+.tablero-juego.alerta16 {
+  animation: parpadeoNaranja 2.5s infinite ease-in-out;
+}
+
+/* ── Flechas SVG (acordeón) ─────────────────────────────────── */
+.flecha {
+  width: 16px;
+  height: 16px;
+  fill: white;
+  transition: transform 0.4s ease;
+  display: inline-block;
+}
+
+.flecha.arriba {
+  transform: rotate(180deg);
+}

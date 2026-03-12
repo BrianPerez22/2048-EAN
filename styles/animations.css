@@ -1,0 +1,64 @@
+/* ============================================================
+   animations.css
+   Todas las animaciones y transiciones del proyecto.
+   Cargado por: index.html, 2048.html, tutorial.html
+   ============================================================ */
+
+/* ── Aparecer (ficha nueva + modal) ─────────────────────────── */
+@keyframes aparecer {
+  0%   { opacity: 0; transform: scale(0); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* ── Salto (ficha fusionada — versión legacy) ───────────────── */
+@keyframes salto {
+  0%   { transform: scale(1);   }
+  50%  { transform: scale(1.1); }
+  100% { transform: scale(1);   }
+}
+
+/* ── Fusion pop (animación principal de fusión) ─────────────── */
+@keyframes fusion-pop {
+  0%   { transform: scale(1);    }
+  40%  { transform: scale(1.25); }
+  60%  { transform: scale(0.95); }
+  100% { transform: scale(1);    }
+}
+
+/* ── Parpadeo naranja (tablero lleno) ───────────────────────── */
+@keyframes parpadeoNaranja {
+  0%   { box-shadow: 0 0 18px  8px rgba(255, 140, 0, 0.4) inset; }
+  50%  { box-shadow: 0 0 28px 14px rgba(255, 140, 0, 0.8) inset; }
+  100% { box-shadow: 0 0 18px  8px rgba(255, 140, 0, 0.4) inset; }
+}
+
+/* ── Rebote (click en Meli) ─────────────────────────────────── */
+@keyframes rebote {
+  0%   { transform: scale(0.9); }
+  50%  { transform: scale(1.1); }
+  100% { transform: scale(1);   }
+}
+
+/* ── Fade (carrusel del tutorial) ───────────────────────────── */
+@keyframes fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Clases de animación ────────────────────────────────────── */
+.ficha.nueva {
+  animation: aparecer 0.2s ease-in-out;
+}
+
+.ficha.fusion,
+.fusion {
+  animation: fusion-pop 0.25s ease-in-out;
+}
+
+/* ── Accesibilidad: sin movimiento ──────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .ficha {
+    transition: none;
+    animation: none;
+  }
+}

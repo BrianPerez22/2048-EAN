@@ -2,19 +2,27 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>2048 EAN Tutorial</title>
-    <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
-  <link rel="stylesheet" href="styles/estilos.css">
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+
+  <!-- CSS modular -->
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/layout.css">
+  <link rel="stylesheet" href="styles/components.css">
+  <link rel="stylesheet" href="styles/animations.css">
+  <link rel="stylesheet" href="styles/tile-colors.css">
+  <link rel="stylesheet" href="styles/tutorial.css">
+  <link rel="stylesheet" href="styles/responsive.css">
 </head>
 <body class="tutorial-desktop">
   <div class="contenedor-juego">
-    
-    <!-- Encabezado (igual estructura que 2048) -->
+
+    <!-- Encabezado -->
     <div class="encabezado">
       <h1 class="titulo">2048 <span class="ean">EAN</span></h1>
 
-      <!-- Columna izquierda: Botones navegación y controles (como barra-info) -->
+      <!-- Columna izquierda (desktop): botones de nav + controles carrusel -->
       <div class="controles-tutorial">
         <div class="botones-navegacion">
           <a href="2048.html"><button class="btn-juego">🎮 Jugar</button></a>
@@ -27,19 +35,19 @@
         </div>
 
         <div class="indicadores-tutorial" id="indicadores-desk">
-          <!-- Los indicadores se crean con JS -->
+          <!-- Indicadores generados por tutorial.js -->
         </div>
       </div>
     </div>
 
-    <!-- Centro: Carrusel (como tablero) -->
+    <!-- Centro (desktop): carrusel clonado por JS -->
     <div class="carrusel-centro">
       <div class="carrusel" id="carrusel-desk">
-        <!-- Los slides se clonan aquí desde móvil -->
+        <!-- tutorial.js clona aquí los slides del carrusel móvil -->
       </div>
     </div>
 
-    <!-- Columna derecha: Meli tutorial (como instrucciones-meli + mini-score) -->
+    <!-- Columna derecha (desktop): Meli + consejos -->
     <div class="meli-tutorial">
       <div class="instrucciones-tutorial">
         <p>Aprende a dominar el 2048 con estas estrategias y controles. ¡Meli te guía!</p>
@@ -56,11 +64,18 @@
       </div>
     </div>
 
-    <!-- Versión MÓVIL (oculta en desktop) -->
+    <!-- ── VERSIÓN MÓVIL ────────────────────────────────────────────
+         Este carrusel es la fuente de verdad de los slides.
+         En desktop, tutorial.js los clona a #carrusel-desk.
+    ──────────────────────────────────────────────────────────────── -->
     <div class="carrusel" id="carrusel-movil">
+
+      <!-- Slide 1: Intro -->
       <div class="carrusel-item activo">
         <h2>📖 Tutorial</h2>
-        <p>El juego consiste en mover las fichas en un tablero 4x4, combinando números iguales hasta alcanzar la meta de 2048. Cada movimiento añade una nueva ficha de 2 o 4.</p>
+        <p>El juego consiste en mover las fichas en un tablero 4x4, combinando números
+           iguales hasta alcanzar la meta de 2048. Cada movimiento añade una nueva
+           ficha de 2 o 4.</p>
         <ul>
           <li>Usa las flechas o desliza para mover las fichas.</li>
           <li>Combina números iguales para que se sumen.</li>
@@ -68,112 +83,162 @@
         </ul>
       </div>
 
-      <div class="carrusel-item"><p>Junta las fichas para que se fusionen.</p><div class="mini-tablero" data-estado="1"></div></div>
-      <div class="carrusel-item"><p>Mantente en la fila inferior.</p><div class="mini-tablero" data-estado="2"></div></div>
-      <div class="carrusel-item"><p>Apila las fichas en una esquina.</p><div class="mini-tablero" data-estado="3"></div></div>
-      <div class="carrusel-item"><p>Llena la primera fila sin mover hacia arriba.</p><div class="mini-tablero" data-estado="4"></div></div>
-      <div class="carrusel-item"><p>Ahora la siguiente, sin romper la fila inferior.</p><div class="mini-tablero" data-estado="5"></div></div>
-      <div class="carrusel-item"><p>Acumula las necesarias para completar otra fila.</p><div class="mini-tablero" data-estado="6"></div></div>
-      <div class="carrusel-item"><p>Y estas serán todas las fichas que necesitarás.</p><div class="mini-tablero" data-estado="7"></div></div>
-      <div class="carrusel-item"><p>¡Júntalas para llegar al 2048!⭐</p><div class="mini-tablero" data-estado="8"></div></div>
-      <div class="carrusel-item"><p>Pero ahí no acaba el juego, continúa hasta que el tablero ya no aguante más 🔥</p><div class="mini-tablero" data-estado="9"></div></div>
-<div class="carrusel-item">
-  <h2>🎚️ El Slider de Deshacer</h2>
-  <p>El deslizador te permite elegir cuántos movimientos atrás puedes revertir, entre 1 y 12. ¡Úsalo con estrategia para no perder tu progreso!</p>
+      <!-- Slide 2 -->
+      <div class="carrusel-item">
+        <p>Junta las fichas para que se fusionen.</p>
+        <div class="mini-tablero" data-estado="1"></div>
+      </div>
 
-  <!-- 🔥 Cajoncito para el slider -->
-  <div class="cajon-slider">
-    <div class="deshacer-contenedor">
-      <label for="rango-deshacer">Deshacer:</label>
-      <input type="range" id="rango-deshacer" min="1" max="12" value="6">
-      <span id="valor-deshacer">6</span>
+      <!-- Slide 3 -->
+      <div class="carrusel-item">
+        <p>Mantente en la fila inferior.</p>
+        <div class="mini-tablero" data-estado="2"></div>
+      </div>
+
+      <!-- Slide 4 -->
+      <div class="carrusel-item">
+        <p>Apila las fichas en una esquina.</p>
+        <div class="mini-tablero" data-estado="3"></div>
+      </div>
+
+      <!-- Slide 5 -->
+      <div class="carrusel-item">
+        <p>Llena la primera fila sin mover hacia arriba.</p>
+        <div class="mini-tablero" data-estado="4"></div>
+      </div>
+
+      <!-- Slide 6 -->
+      <div class="carrusel-item">
+        <p>Ahora la siguiente, sin romper la fila inferior.</p>
+        <div class="mini-tablero" data-estado="5"></div>
+      </div>
+
+      <!-- Slide 7 -->
+      <div class="carrusel-item">
+        <p>Acumula las necesarias para completar otra fila.</p>
+        <div class="mini-tablero" data-estado="6"></div>
+      </div>
+
+      <!-- Slide 8 -->
+      <div class="carrusel-item">
+        <p>Y estas serán todas las fichas que necesitarás.</p>
+        <div class="mini-tablero" data-estado="7"></div>
+      </div>
+
+      <!-- Slide 9 -->
+      <div class="carrusel-item">
+        <p>¡Júntalas para llegar al 2048! ⭐</p>
+        <div class="mini-tablero" data-estado="8"></div>
+      </div>
+
+      <!-- Slide 10 -->
+      <div class="carrusel-item">
+        <p>Pero ahí no acaba el juego, continúa hasta que el tablero ya no aguante más 🔥</p>
+        <div class="mini-tablero" data-estado="9"></div>
+      </div>
+
+      <!-- Slide 11: Slider de deshacer -->
+      <div class="carrusel-item">
+        <h2>🎚️ El Slider de Deshacer</h2>
+        <p>El deslizador te permite elegir cuántos movimientos atrás puedes revertir,
+           entre 1 y 12. ¡Úsalo con estrategia para no perder tu progreso!</p>
+        <div class="cajon-slider">
+          <div class="deshacer-contenedor">
+            <label for="rango-deshacer">Deshacer:</label>
+            <input type="range" id="rango-deshacer" min="1" max="12" value="6">
+            <span id="valor-deshacer">6</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 12: Controles PC (parte 1) -->
+      <div class="carrusel-item">
+        <h2>⌨️ Controles de PC</h2>
+        <div class="cajon-slider">
+          <div class="controles-grid">
+            <div class="control-item">
+              <div class="teclas">
+                <span class="tecla">↑</span>
+                <span class="tecla">↓</span>
+                <span class="tecla">←</span>
+                <span class="tecla">→</span>
+              </div>
+              <p>Mover fichas con las flechas del teclado</p>
+            </div>
+            <div class="control-item">
+              <div class="teclas">
+                <span class="tecla">W</span>
+                <span class="tecla">A</span>
+                <span class="tecla">S</span>
+                <span class="tecla">D</span>
+              </div>
+              <p>También puedes usar WASD para moverte</p>
+            </div>
+            <div class="control-item">
+              <div class="teclas">
+                <span class="tecla">R</span>
+                <span class="tecla">Supr</span>
+                <span class="tecla combo">Ctrl+Z</span>
+              </div>
+              <p>Deshacer el último movimiento</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 13: Controles PC (parte 2) -->
+      <div class="carrusel-item">
+        <h2>⌨️ Controles de PC</h2>
+        <div class="cajon-slider">
+          <div class="controles-grid">
+            <div class="control-item">
+              <div class="teclas">
+                <span class="tecla">Espacio</span>
+              </div>
+              <p>Nueva partida (pregunta confirmación)</p>
+            </div>
+            <div class="control-item">
+              <div class="teclas">
+                <span class="tecla combo">Ctrl+R</span>
+              </div>
+              <p>Reiniciar partida directamente</p>
+            </div>
+            <div class="control-item">
+              <div class="teclas">
+                <span class="tecla">M</span>
+              </div>
+              <p>Activar/desactivar efectos de sonido</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
-  </div>
-</div>
-<!-- Slides de controles PC -->
-<div class="carrusel-item">
-  <h2>⌨️ Controles de PC</h2>
-  <div class="cajon-slider">
-    <div class="controles-grid">
-      <div class="control-item">
-        <div class="teclas">
-          <span class="tecla">↑</span>
-          <span class="tecla">↓</span>
-          <span class="tecla">←</span>
-          <span class="tecla">→</span>
-        </div>
-        <p>Mover fichas con las flechas del teclado</p>
-      </div>
+    <!-- ── FIN CARRUSEL MÓVIL ──────────────────────────────────── -->
 
-      <div class="control-item">
-        <div class="teclas">
-          <span class="tecla">W</span>
-          <span class="tecla">A</span>
-          <span class="tecla">S</span>
-          <span class="tecla">D</span>
-        </div>
-        <p>También puedes usar WASD para moverte</p>
-      </div>
-
-      <!-- 🔥 Deshacer movido aquí -->
-      <div class="control-item">
-        <div class="teclas">
-          <span class="tecla">R</span>
-          <span class="tecla">Supr</span>
-          <span class="tecla combo">Ctrl+Z</span>
-        </div>
-        <p>Deshacer el último movimiento</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="carrusel-item">
-  <h2>⌨️ Controles de PC</h2>
-  <div class="cajon-slider">
-    <div class="controles-grid">
-      <div class="control-item">
-        <div class="teclas">
-          <span class="tecla">Espacio</span>
-        </div>
-        <p>Nueva partida (pregunta confirmación)</p>
-      </div>
-
-      <div class="control-item">
-        <div class="teclas">
-          <span class="tecla combo">Ctrl+R</span>
-        </div>
-        <p>Reiniciar partida directamente</p>
-      </div>
-
-      <div class="control-item">
-        <div class="teclas">
-          <span class="tecla">M</span>
-        </div>
-        <p>Activar/desactivar efectos de sonido</p>
-      </div>
-    </div>
-  </div>
-</div>
-    <!-- Controles móvil (ocultos en desktop) -->
+    <!-- Controles de navegación móvil -->
     <div class="carrusel-controles">
       <button id="btn-prev" disabled>⬅</button>
       <div class="carrusel-indicadores"></div>
       <button id="btn-next">➡</button>
     </div>
-    <!-- Meli móvil (oculta en desktop) -->
+
+    <!-- Meli móvil -->
     <div class="meli-contenedor">
       <a href="2048.html">
-        <img src="img/Meli-04.svg.svg" alt="Meli" class="meli-img">
+        <img src="img/Meli-04.svg" alt="Meli" class="meli-img">
       </a>
     </div>
-    <!-- Botones móvil (ocultos en desktop) -->
+
+    <!-- Botones de navegación móvil -->
     <div class="botones-menu">
       <a href="2048.html"><button class="btn-juego">🎮 Jugar</button></a>
       <a href="index.html"><button class="btn-juego">⬅ Volver al Menú</button></a>
     </div>
+
   </div>
 
-  <script src="tutorial.js"></script>
+  <!-- Lógica del tutorial (carrusel, mini-tableros, slider) -->
+  <script src="js/tutorial.js"></script>
 </body>
 </html>

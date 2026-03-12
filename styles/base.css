@@ -1,0 +1,41 @@
+/* ============================================================
+   base.css
+   Reset global, configuración del body y variables CSS.
+   Cargado por: index.html, 2048.html, tutorial.html
+   ============================================================ */
+
+/* ── Variables CSS ─────────────────────────────────────────── */
+:root {
+  --color-primario:    #3bac53;
+  --color-secundario:  #2bbbad;
+  --color-fondo-btn:   #8f7a66;
+  --color-fondo-btn-hover: #9f857a;
+  --color-tablero:     #bbada0;
+  --color-texto:       #776e65;
+  --color-texto-oscuro:#332416da;
+  --color-celda:       rgba(238, 228, 218, 0.35);
+  --radio-base:        10px;
+  --radio-grande:      20px;
+  --sombra-card:       0 15px 35px rgba(0, 0, 0, 0.1);
+  --grad-body:         linear-gradient(135deg, #4ade80 0%, #22d3ee 50%, #3b82f6 100%);
+  --transicion-base:   all 0.3s ease;
+}
+
+/* ── Reset ─────────────────────────────────────────────────── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ── Body ──────────────────────────────────────────────────── */
+body {
+  font-family: 'Arial', sans-serif;
+  background: var(--grad-body);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}

@@ -4,52 +4,59 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>2048 EAN</title>
-    <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
-  <link rel="stylesheet" href="styles/estilos.css">
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+
+  <!-- CSS modular (mismo contenido que estilos.css, dividido por responsabilidad) -->
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/layout.css">
+  <link rel="stylesheet" href="styles/components.css">
+  <link rel="stylesheet" href="styles/animations.css">
+  <link rel="stylesheet" href="styles/tile-colors.css">
+  <link rel="stylesheet" href="styles/responsive.css">
 </head>
 <body>
   <div class="contenedor-juego">
+
     <!-- Encabezado -->
     <div class="encabezado">
       <h1 class="titulo">2048 <span class="ean">EAN</span></h1>
 
       <div class="barra-info">
         <div class="contenedor-puntajes">
-<div class="grupo-puntajes">
-  <div class="item-puntaje">
-    <div class="etiqueta-puntaje">PUNTAJE</div>
-    <div class="valor-puntaje" id="puntaje">0</div>
-  </div>
-  <div class="item-puntaje">
-    <div class="etiqueta-puntaje">MEJOR</div>
-    <div class="valor-puntaje" id="mejor">0</div>
-  </div>
-  <div class="item-puntaje">
-    <div class="etiqueta-puntaje">FICHAS</div>
-    <div class="valor-puntaje" id="fichas">0</div>
-  </div>
-</div>
-
-
+          <div class="grupo-puntajes">
+            <div class="item-puntaje">
+              <div class="etiqueta-puntaje">PUNTAJE</div>
+              <div class="valor-puntaje" id="puntaje">0</div>
+            </div>
+            <div class="item-puntaje">
+              <div class="etiqueta-puntaje">MEJOR</div>
+              <div class="valor-puntaje" id="mejor">0</div>
+            </div>
+            <div class="item-puntaje">
+              <div class="etiqueta-puntaje">FICHAS</div>
+              <div class="valor-puntaje" id="fichas">0</div>
+            </div>
+          </div>
         </div>
 
-     <div class="contenedor-botones">
-  <button class="btn-juego" id="btn-deshacer">↶ DESHACER</button>
-  <button class="btn-juego" id="btn-reiniciar">🔄 REINICIAR</button>
-  <!-- Botón Tutorial corregido -->
-<button class="btn-juego" onclick="window.location.href='tutorial.html'">📖 TUTORIAL</button>
+        <div class="contenedor-botones">
+          <button class="btn-juego" id="btn-deshacer">↶ DESHACER</button>
+          <button class="btn-juego" id="btn-reiniciar">🔄 REINICIAR</button>
+          <button class="btn-juego" onclick="window.location.href='tutorial.html'">📖 TUTORIAL</button>
+        </div>
 
-</div>
-
-      <div class="controles-extra">
-        <!-- 🔹 Eliminado el texto "Usa las flechas, WASD o desliza en el móvil" -->
-        <div class="control-deshacer">
-          <label>Pasos a deshacer:</label>
-          <input id="rango-deshacer" type="range" min="1" max="12" value="6">
-          <span id="valor-deshacer">6</span>
+        <div class="controles-extra">
+          <div class="control-deshacer">
+            <label>Pasos a deshacer:</label>
+            <input id="rango-deshacer" type="range" min="1" max="12" value="6">
+            <span id="valor-deshacer">6</span>
+          </div>
         </div>
       </div>
+      <!-- fin .barra-info -->
+
     </div>
+    <!-- fin .encabezado -->
 
     <!-- Tablero -->
     <div class="tablero-juego" id="tablero-juego">
@@ -59,7 +66,7 @@
       <div class="celda"></div><div class="celda"></div><div class="celda"></div><div class="celda"></div>
       <div class="celda"></div><div class="celda"></div><div class="celda"></div><div class="celda"></div>
 
-      <!-- Pantalla de fin -->
+      <!-- Pantalla de fin (JS la recrea en configurarUI, este es el fallback) -->
       <div class="fin-juego" id="fin-juego">
         <div class="texto-fin" id="texto-superior">¡Fin del juego!</div>
         <div class="puntaje-fin" id="mensaje-fin">Puntaje final: <span id="puntaje-final">0</span></div>
@@ -69,25 +76,25 @@
         </div>
       </div>
     </div>
+    <!-- fin .tablero-juego -->
 
-    <!-- Instrucciones -->
-    <div class="columna-derecha-desktop">
-      <div class="instrucciones-meli">
-        <p class="texto-instrucciones" id="textoInstrucciones">
-          Junta las fichas del mismo número para que se fusionen, llega al 2048 para ganar.
-        </p>
-        <img src="img/Meli-01.svg" alt="Meli botón" class="meli-boton" id="meliSwitch">
-      </div>
+    <!-- Instrucciones + Meli + Mini-score -->
+    <div class="instrucciones-meli">
+      <p class="texto-instrucciones" id="textoInstrucciones">
+        Junta las fichas del mismo número para que se fusionen, llega al 2048 para ganar.
+      </p>
+      <img src="img/Meli-01.svg" alt="Meli botón" class="meli-boton" id="meliSwitch">
+    </div>
 
-      <div id="mini-score" class="mini-score">
-        <h3>🏆Puntajes🏆</h3>
-        <ul id="lista-scores"></ul>
-        <button id="btn-ver-mas" class="btn-juego">Ver más</button>
-      </div>
+    <div id="mini-score" class="mini-score">
+      <h3>🏆Puntajes🏆</h3>
+      <ul id="lista-scores"></ul>
+      <button id="btn-ver-mas" class="btn-juego">Ver más</button>
     </div>
 
   </div>
+  <!-- fin .contenedor-juego -->
 
-  <script src="juego.js"></script>
+  <script src="js/juego.js"></script>
 </body>
 </html>

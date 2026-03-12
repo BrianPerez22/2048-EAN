@@ -1,3 +1,46 @@
+/**
+ * juego.js  (js/juego.js)
+ * Lógica completa del juego 2048 EAN + integración con AWS.
+ *
+ * ── SECCIONES ──────────────────────────────────────────────
+ *  1. Configuración base          → constantes globales, claves localStorage
+ *  2. Filtro de palabras          → validación de nombres antes de enviar a AWS
+ *  3. AWS API                     → apiGuardarPuntajeAWS(), apiObtenerTopAWS()
+ *  4. Utilidades                  → helpers puros (copiarMatriz, generarId…)
+ *  5. Clase Juego2048             → toda la lógica del juego:
+ *     5.1  Constructor            → estado inicial, referencias DOM
+ *     5.2  iniciar()              → arranque: audio, UI, eventos, cargar/nuevo
+ *     5.3  configurarEventos()    → teclado, touch, botones, slider
+ *     5.4  configurarUI()         → crea celdas, overlay fin, slider
+ *     5.5  Lógica tablero        → guardarEstado, deshacer, nuevo, reiniciar
+ *     5.6  mover(dir)             → movimiento + fusión + animación pop
+ *     5.7  verificarEstado()      → detecta victoria (2048) y fin de juego
+ *     5.8  actualizarVista()      → renderiza fichas con transform CSS
+ *     5.9  crearFicha()           → crea nodo DOM de ficha con animación
+ *     5.10 AWS / MiniScore        → agregarAlHistorial, cargarHistorialMiniScore
+ *     5.11 Audio                  → sonido(), toggleSonido()
+ *     5.12 Persistencia           → guardar(), cargar() con localStorage
+ *  6. Inicialización              → DOMContentLoaded → new Juego2048()
+ *  7. Meli Switch                 → toggle mensaje/imagen del personaje
+ *
+ * ── AWS ────────────────────────────────────────────────────
+ *  API_BASE = "https://9g0v6cib0g.execute-api.us-east-1.amazonaws.com"
+ *  POST {API_BASE}/scores             → guardar puntaje al terminar partida
+ *  GET  {API_BASE}/scores/top?limit=5 → cargar Top 5 en mini-score
+ *
+ * ── ESTADO EN LOCALSTORAGE ─────────────────────────────────
+ *  '2048_ean_estado'  → tablero, puntaje, historial, maxDeshacer, sonido
+ *  '2048_ean_mejor'   → mejor puntaje histórico
+ *
+ * ── DEPENDENCIAS DOM (IDs esperados en 2048.html) ──────────
+ *  #tablero-juego, #puntaje, #mejor, #fichas
+ *  #fin-juego, #puntaje-final, #texto-superior, #mensaje-fin
+ *  #btn-deshacer, #btn-reiniciar, #btn-continuar, #btn-reiniciar2
+ *  #rango-deshacer, #valor-deshacer
+ *  #lista-scores, #btn-ver-mas
+ *  #meliSwitch, #textoInstrucciones
+ */
+
 // =====================================================
 // Configuración base
 // =====================================================

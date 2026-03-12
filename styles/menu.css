@@ -1,0 +1,119 @@
+/* ============================================================
+   menu.css
+   Estilos exclusivos del menú principal (index.html).
+   Cargado por: index.html únicamente.
+   ============================================================ */
+
+/* ── Contenedor del menú ────────────────────────────────────── */
+.contenedor-menu {
+  background: white;
+  border-radius: var(--radio-grande);
+  padding: 30px;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--sombra-card);
+  margin: 24px auto;
+}
+
+.contenedor-menu p,
+.contenedor-menu h3,
+.contenedor-menu ul {
+  color: #444;
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+/* ── Acordeón ───────────────────────────────────────────────── */
+.acordeon {
+  margin-top: 20px;
+}
+
+.acordeon-btn {
+  background: var(--color-fondo-btn);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: var(--radio-base);
+  font-weight: bold;
+  cursor: pointer;
+  transition: var(--transicion-base);
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+}
+
+.acordeon-btn:hover {
+  background: var(--color-fondo-btn-hover);
+  transform: translateY(-2px);
+}
+
+/* ── Contenido desplegable ──────────────────────────────────── */
+.acordeon-contenido {
+  margin-top: 10px;
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: var(--radio-base);
+  color: #444;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+  text-align: left;
+}
+
+.acordeon-contenido.expandido {
+  max-height: 1000px;
+}
+
+/* ── Botones del menú ───────────────────────────────────────── */
+.botones-menu {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+/* ── Descripción expandible (variante alternativa) ──────────── */
+.descripcion {
+  margin-top: 15px;
+  font-size: 1rem;
+  color: #444;
+  background: #f9f9f9;
+  padding: 10px 15px;
+  border-radius: var(--radio-base);
+  overflow: hidden;
+  max-height: 2.2em;
+  transition: max-height 0.45s ease;
+  line-height: 1.2em;
+  text-align: left;
+}
+
+.descripcion.expandida {
+  max-height: 600px;
+}
+
+#btn-expandir {
+  margin-top: 10px;
+  background: var(--color-fondo-btn);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: var(--radio-base);
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#btn-expandir:hover {
+  background: var(--color-fondo-btn-hover);
+  transform: translateY(-2px);
+}
