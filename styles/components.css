@@ -233,6 +233,7 @@
 .modal-victoria p {
   margin: 12px 0;
   font-weight: bold;
+  color: var(--color-texto-card);
 }
 
 .modal-victoria .botones-fin {

@@ -24,6 +24,24 @@
   display: block;
 }
 
+/* ── Textos del carrusel móvil ──────────────────────────────── */
+.carrusel-item p,
+.carrusel-item li {
+  color: var(--color-texto-card);
+}
+
+.carrusel-item h2 {
+  color: var(--color-primario);
+  margin-bottom: 15px;
+}
+
+.carrusel-item ul {
+  text-align: left;
+  max-width: 350px;
+  margin: 0 auto;
+  color: var(--color-texto-card);
+}
+
 /* ── Controles de navegación del carrusel ───────────────────── */
 .carrusel-controles {
   display: flex;
@@ -32,11 +50,18 @@
 }
 
 .carrusel-controles button {
-  background: #fff;
-  border: 2px solid #ccc;
+  background: var(--color-card);
+  color: var(--color-texto-card);
+  border: 2px solid var(--color-tablero);
   padding: 8px 12px;
   border-radius: 8px;
   cursor: pointer;
+  transition: var(--transicion-base);
+}
+
+.carrusel-controles button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 /* ── Indicadores (bolitas) ──────────────────────────────────── */
@@ -50,7 +75,7 @@
 .carrusel-indicadores .indicador {
   width: 13px;
   height: 13px;
-  background: #ccc;
+  background: var(--color-tablero);
   border-radius: 50%;
   transition: background 0.2s ease;
 }
@@ -74,7 +99,7 @@
 }
 
 .mini-celda {
-  background: #cdc1b4;
+  background: var(--color-mini-celda, #cdc1b4);
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -85,8 +110,8 @@
 
 /* ── Cajón del slider (demo en tutorial) ────────────────────── */
 .cajon-slider {
-  background: #f8f9fa;
-  border: 2px dashed #bbb;
+  background: var(--color-score-li);
+  border: 2px dashed var(--color-borde-dibujado, #bbb);
   border-radius: var(--radio-base);
   padding: 15px 20px;
   margin-top: 15px;
@@ -108,10 +133,10 @@
 }
 
 .control-item {
-  background: #f8f9fa;
+  background: var(--color-score-li);
   padding: 20px;
   border-radius: 12px;
-  border: 2px solid #e9ecef;
+  border: 2px solid var(--color-tablero);
   text-align: center;
 }
 
@@ -124,15 +149,15 @@
 }
 
 .tecla {
-  background: #ffffff;
-  border: 2px solid #dee2e6;
-  border-bottom: 4px solid #adb5bd;
+  background: var(--color-card);
+  border: 2px solid var(--color-tablero);
+  border-bottom: 4px solid var(--color-texto);
   padding: 8px 12px;
   border-radius: 6px;
   font-family: 'Courier New', monospace;
   font-weight: bold;
   font-size: 14px;
-  color: #495057;
+  color: var(--color-texto-card);
   min-width: 40px;
   display: inline-flex;
   align-items: center;
@@ -149,7 +174,7 @@
 .control-item p {
   margin: 0;
   font-size: 14px;
-  color: #6c757d;
+  color: var(--color-texto-card);
   font-weight: 500;
 }
 
@@ -228,7 +253,7 @@
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #ccc;
+    background: var(--color-tablero);
     transition: background 0.2s ease, transform 0.2s ease;
   }
 
@@ -259,7 +284,7 @@
   .tutorial-desktop .carrusel-item {
     flex: 0 0 100%;
     display: none;
-    background: var(--color-card, white);
+    background: var(--color-card);
     border-radius: var(--radio-base);
     padding: 20px;
     text-align: center;
@@ -282,14 +307,14 @@
     font-size: 1rem;
     line-height: 1.5;
     margin-bottom: 15px;
-    color: var(--color-texto-card, #444);
+    color: var(--color-texto-card);
   }
 
   .tutorial-desktop .carrusel-item ul {
     text-align: left;
     max-width: 350px;
     margin: 0 auto;
-    color: var(--color-texto-card, #444);
+    color: var(--color-texto-card);
   }
 
   .tutorial-desktop .mini-tablero {
@@ -327,7 +352,7 @@
   .tutorial-desktop .instrucciones-tutorial { order: 1; }
 
   .tutorial-desktop .instrucciones-tutorial {
-    background: var(--color-card, rgba(255, 255, 255, 0.95));
+    background: var(--color-card);
     border-radius: 15px;
     padding: 20px;
     width: 100%;
@@ -337,7 +362,7 @@
 
   .tutorial-desktop .instrucciones-tutorial p {
     font-size: 0.9rem;
-    color: var(--color-texto-card, #444);
+    color: var(--color-texto-card);
     line-height: 1.4;
     margin-bottom: 15px;
   }
@@ -356,8 +381,8 @@
 
   /* Cajón de consejos (estilo dibujado) */
   .tutorial-desktop .info-tutorial {
-    border: 2px dashed var(--color-borde-dibujado, #444);
-    background: var(--color-card-dibujada, #fffefc);
+    border: 2px dashed var(--color-borde-dibujado);
+    background: var(--color-card-dibujada);
     border-radius: var(--radio-base);
     padding: 20px;
     width: 100%;
@@ -375,7 +400,7 @@
 
   .tutorial-desktop .info-tutorial p {
     font-size: 0.85rem;
-    color: var(--color-texto-card, #444);
+    color: var(--color-texto-card);
     line-height: 1.3;
     margin-bottom: 8px;
   }

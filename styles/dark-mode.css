@@ -18,10 +18,10 @@ body.dark {
   --color-secundario:      #2bbbad;
   --color-fondo-btn:       #4a4039;
   --color-fondo-btn-hover: #5a504a;
-  --color-tablero:         #3a3530;
+  --color-tablero:         #2a2018;
   --color-texto:           #d4c8be;
   --color-texto-oscuro:    #e8ddd5;
-  --color-celda:           rgba(60, 50, 45, 0.6);
+  --color-celda:           rgba(90, 72, 58, 0.65);
   --sombra-card:           0 15px 35px rgba(0, 0, 0, 0.4);
   --grad-body:             linear-gradient(135deg, #1a4a2a 0%, #0d3a3a 50%, #1a2a4a 100%);
 
@@ -40,7 +40,7 @@ body.dark {
   --color-score-texto:     #c8b8ae;
 
   /* ── Variables de mini tablero (tutorial) ──────────────────── */
-  --color-mini-celda:      #4a4035;
+  --color-mini-celda:      #5a4a38;
 
   /* ── Body background ───────────────────────────────────────── */
   background: var(--grad-body);

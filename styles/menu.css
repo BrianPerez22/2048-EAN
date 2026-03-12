@@ -6,7 +6,7 @@
 
 /* ── Contenedor del menú ────────────────────────────────────── */
 .contenedor-menu {
-  background: white;
+  background: var(--color-card);
   border-radius: var(--radio-grande);
   padding: 30px;
   max-width: 600px;
@@ -19,7 +19,7 @@
 .contenedor-menu p,
 .contenedor-menu h3,
 .contenedor-menu ul {
-  color: #444;
+  color: var(--color-texto-card);
   text-align: left;
   margin-bottom: 15px;
 }
@@ -54,20 +54,21 @@
 /* ── Contenido desplegable ──────────────────────────────────── */
 .acordeon-contenido {
   margin-top: 10px;
-  background: #f9f9f9;
-  padding: 15px;
+  background: var(--color-score-li);
+  padding: 0 15px;
   border-radius: var(--radio-base);
-  color: #444;
+  color: var(--color-texto-card);
   font-size: 0.95rem;
   line-height: 1.5;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.5s ease;
+  transition: max-height 0.5s ease, padding 0.3s ease;
   text-align: left;
 }
 
 .acordeon-contenido.expandido {
   max-height: 1000px;
+  padding: 15px;
 }
 
 /* ── Botones del menú ───────────────────────────────────────── */
@@ -83,8 +84,8 @@
 .descripcion {
   margin-top: 15px;
   font-size: 1rem;
-  color: #444;
-  background: #f9f9f9;
+  color: var(--color-texto-card);
+  background: var(--color-score-li);
   padding: 10px 15px;
   border-radius: var(--radio-base);
   overflow: hidden;

@@ -54,7 +54,9 @@
   .contenedor-juego {
     display: grid;
     grid-template-columns: 300px 1fr 300px;
-    gap: 30px;
+    grid-template-rows: auto auto auto;
+    column-gap: 30px;
+    row-gap: 15px;
     align-items: start;
     justify-items: center;
     max-width: 1200px;
@@ -73,6 +75,7 @@
   /* Columna izquierda: puntajes y controles */
   .barra-info {
     grid-column: 1;
+    grid-row: 2 / 4;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -124,7 +127,9 @@
   /* Centro: tablero */
   .tablero-juego {
     grid-column: 2;
+    grid-row: 2 / 4;
     justify-self: center;
+    align-self: center;
     max-width: 450px;
     width: 100%;
     aspect-ratio: 1;
@@ -133,8 +138,10 @@
   /* Columna derecha: Meli + instrucciones */
   .instrucciones-meli {
     grid-column: 3;
+    grid-row: 2;
     flex-direction: column;
     align-items: center;
+    align-self: start;
     gap: 15px;
     width: 100%;
     margin-top: 0;
@@ -148,11 +155,13 @@
 
   .meli-boton { max-width: 100px; }
 
-  /* Mini-score pegado debajo de Meli */
+  /* Mini-score: misma columna, fila siguiente — alineado arriba */
   #mini-score {
     grid-column: 3;
+    grid-row: 3;
+    align-self: start;
     width: 100%;
-    margin-top: 15px;
+    margin-top: 0;
     padding: 15px;
   }
 
