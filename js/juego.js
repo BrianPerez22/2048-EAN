@@ -250,13 +250,7 @@ configurarEventos() {
     // Escape para cerrar overlay
     if (e.key === 'Escape') {
       if (this.domFin.classList.contains('mostrar')) {
-        if (this.ganado && !this.terminado) {
-          // Si ganó pero puede continuar
-          this.ocultarFin();
-          this.ganado = false;
-          this.continuarDespuesVictoria = true;
-        } else if (this.perdidoTemporal) {
-          // Si perdió temporalmente, permitir cerrar con Escape
+        if (this.perdidoTemporal) {
           this.ocultarFin();
         }
       }
@@ -303,18 +297,11 @@ configurarEventos() {
     });
   }
 
-  // 🆕 Botón continuar modificado - ahora también funciona como "deshacer" cuando perdió temporalmente
   const btnContinuar = document.getElementById('btn-continuar');
   if (btnContinuar) {
     btnContinuar.addEventListener('click', () => {
       if (this.perdidoTemporal) {
-        // Si perdió temporalmente, usar deshacer
         this.deshacer();
-      } else if (this.ganado) {
-        // Continuar después de ganar
-        this.ocultarFin();
-        this.ganado = false;
-        this.continuarDespuesVictoria = true;
       }
     });
   }
@@ -368,10 +355,10 @@ configurarEventos() {
     overlay.className = 'fin-juego';
 overlay.innerHTML = `
   <div class="modal-victoria">
-    <h2 id="texto-superior">¡Llegaste a 2048 🎉!</h2>
+    <h2 id="texto-superior">¡Sin movimientos disponibles!</h2>
     <p id="mensaje-fin">Puntaje final: <span id="puntaje-final">0</span></p>
     <div class="botones-fin">
-      <button class="btn-juego" id="btn-continuar">Continuar</button>
+      <button class="btn-juego" id="btn-continuar">Deshacer</button>
       <button class="btn-juego" id="btn-reiniciar2">Reiniciar</button>
     </div>
   </div>`;
@@ -555,16 +542,15 @@ if (this.perdidoTemporal) return;
 verificarEstado() {
   const hay2048 = this.tablero.some(f => f.includes(2048));
 
-  // Solo mostrar victoria la primera vez
-  if (hay2048 && !this.continuarDespuesVictoria && !this.ganado) {
+  // Al llegar a 2048 se marca internamente pero el juego continúa sin interrupción
+  if (hay2048 && !this.ganado) {
     this.ganado = true;
-    setTimeout(() => this.mostrarFin(), 300);
-    return;
+    this.continuarDespuesVictoria = true;
   }
 
-  // Si no hay más movimientos, pérdida temporal (aún puede deshacer)
+  // Si no hay más movimientos, fin de partida
   if (this.esFin()) {
-    this.perdidoTemporal = true; // Marcar como pérdida temporal
+    this.perdidoTemporal = true;
     setTimeout(() => this.mostrarFin(), 300);
   }
 }
@@ -587,14 +573,8 @@ mostrarFin() {
   const mensaje = document.getElementById('mensaje-fin');
   const btnContinuar = document.getElementById('btn-continuar');
   const btnReiniciar = document.getElementById('btn-reiniciar2');
-  
-  if (this.ganado) {
-    texto.textContent = '¡Llegaste a 2048 🎉!';
-    mensaje.textContent = 'Puedes seguir jugando o reiniciar.';
-    btnContinuar.style.display = 'inline-block';
-    btnContinuar.textContent = 'Continuar';
-    btnReiniciar.textContent = 'Reiniciar';
-  } else if (this.perdidoTemporal) {
+
+  if (this.perdidoTemporal) {
     // Estado de pérdida temporal - aún puede deshacer
     texto.textContent = '¡Sin movimientos disponibles!';
     mensaje.innerHTML = `¿Quieres deshacer o finalizar?<br>Puntaje actual: <span>${this.puntaje}</span>`;
@@ -608,7 +588,7 @@ mostrarFin() {
     btnContinuar.style.display = 'none';
     btnReiniciar.textContent = 'Nueva partida';
   }
-  
+
   this.domFin.classList.add('mostrar');
 }
 
